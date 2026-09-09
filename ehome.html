@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="js/security.js"></script>
+    <script src="js/guard.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>GOKU ELITE VIP — Command Center</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background: #05070a; color: #d1d9e6; min-height: 100vh; display: flex; justify-content: center; overflow-x: hidden; }
+        body::before { content: ''; position: fixed; top: -10%; left: 50%; transform: translateX(-50%); width: 500px; height: 500px; background: radial-gradient(circle, rgba(245,179,66,0.12) 0%, rgba(227,55,72,0.08) 40%, rgba(0,0,0,0) 70%); pointer-events: none; z-index: 0; }
+        .app-wrapper { max-width: 440px; width: 100%; min-height: 100vh; background: rgba(10,14,23,0.95); backdrop-filter: blur(20px); box-shadow: 0 0 100px rgba(0,0,0,0.9), 0 0 2px rgba(245,179,66,0.3); position: relative; z-index: 1; display: flex; flex-direction: column; border-left: 1px solid rgba(245,179,66,0.15); border-right: 1px solid rgba(245,179,66,0.15); }
+        .header { background: linear-gradient(135deg, rgba(20,16,10,0.95) 0%, rgba(12,15,25,0.95) 100%); height: 64px; display: flex; align-items: center; padding: 0 18px; justify-content: space-between; border-bottom: 1px solid rgba(245,179,66,0.25); box-shadow: 0 4px 25px rgba(0,0,0,0.6); }
+        .logo-area { display: flex; align-items: center; gap: 8px; }
+        .logo-badge { width: 32px; height: 32px; background: linear-gradient(135deg, #f5b342 0%, #e33748 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; box-shadow: 0 0 15px rgba(245,179,66,0.4); }
+        .logo-title { font-size: 18px; font-weight: 900; letter-spacing: 0.5px; background: linear-gradient(135deg, #ffffff 0%, #f5b342 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .vip-tag { background: linear-gradient(135deg, rgba(245,179,66,0.2) 0%, rgba(227,55,72,0.2) 100%); border: 1px solid rgba(245,179,66,0.5); color: #f5b342; border-radius: 20px; padding: 3px 10px; font-size: 10px; font-weight: 800; letter-spacing: 1.5px; text-shadow: 0 0 8px rgba(245,179,66,0.5); animation: vipPulse 2s infinite ease-in-out; }
+        @keyframes vipPulse { 0%, 100% { opacity: 0.85; transform: scale(1); } 50% { opacity: 1; transform: scale(1.04); box-shadow: 0 0 12px rgba(245,179,66,0.4); } }
+        .btn-logout { background: rgba(227,55,72,0.12); border: 1px solid rgba(227,55,72,0.3); color: #ff5a6e; border-radius: 10px; padding: 7px 14px; font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.25s; }
+        .btn-logout:hover { background: rgba(227,55,72,0.25); border-color: #ff5a6e; color: #fff; }
+        .content { padding: 20px 16px; flex: 1; }
+        .vip-hero { background: linear-gradient(135deg, rgba(30,22,12,0.8) 0%, rgba(15,20,32,0.8) 100%); border: 1px solid rgba(245,179,66,0.3); border-radius: 20px; padding: 20px; margin-bottom: 22px; position: relative; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .vip-hero::after { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: linear-gradient(45deg, transparent 45%, rgba(245,179,66,0.08) 50%, transparent 55%); animation: sweep 4s infinite linear; pointer-events: none; }
+        @keyframes sweep { 0% { transform: translate(-30%, -30%) rotate(0deg); } 100% { transform: translate(30%, 30%) rotate(360deg); } }
+        .vip-hero-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; }
+        .vip-hero-title { font-size: 11px; color: #f5b342; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; }
+        .vip-hero-status { display: flex; align-items: center; gap: 6px; font-size: 11px; color: #3ddc84; font-weight: 700; }
+        .live-dot { width: 8px; height: 8px; background: #3ddc84; border-radius: 50%; box-shadow: 0 0 10px #3ddc84; animation: blink 1.2s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+        .vip-metrics { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; text-align: center; }
+        .metric-card { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 10px 6px; }
+        .metric-lbl { font-size: 9px; color: #7e8b9b; text-transform: uppercase; font-weight: 700; margin-bottom: 3px; }
+        .metric-val { font-size: 13px; color: #fff; font-weight: 800; }
+        .metric-val.gold { color: #f5b342; }
+        .quick-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 24px; }
+        .action-btn { background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 12px; display: flex; align-items: center; gap: 10px; color: #d1d9e6; text-decoration: none; font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+        .action-btn:hover { background: rgba(255,255,255,0.08); border-color: rgba(245,179,66,0.4); color: #fff; transform: translateY(-1px); }
+        .action-icon { font-size: 18px; }
+        .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+        .section-title { font-size: 12px; color: #f5b342; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 800; display: flex; align-items: center; gap: 6px; }
+        .elite-grid { display: flex; flex-direction: column; gap: 14px; margin-bottom: 28px; }
+        .elite-card { background: linear-gradient(135deg, rgba(28,22,14,0.9) 0%, rgba(16,20,32,0.9) 100%); border: 1px solid rgba(245,179,66,0.4); border-radius: 18px; padding: 18px; display: flex; align-items: center; gap: 16px; text-decoration: none; color: #fff; position: relative; overflow: hidden; box-shadow: 0 6px 25px rgba(245,179,66,0.12); transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .elite-card:hover { transform: translateY(-3px) scale(1.01); border-color: rgba(245,179,66,0.8); box-shadow: 0 12px 35px rgba(245,179,66,0.25); }
+        .elite-card-icon { width: 56px; height: 56px; border-radius: 16px; background: linear-gradient(135deg, #f5b342 0%, #e33748 100%); display: flex; align-items: center; justify-content: center; font-size: 28px; flex-shrink: 0; box-shadow: 0 0 20px rgba(245,179,66,0.4); }
+        .elite-card-info { flex: 1; }
+        .elite-card-title { font-size: 17px; font-weight: 900; color: #fff; letter-spacing: 0.5px; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+        .elite-card-sub { font-size: 12px; color: #9ab0c9; font-weight: 500; }
+        .gold-badge { background: rgba(245,179,66,0.18); color: #f5b342; border: 1px solid rgba(245,179,66,0.4); border-radius: 20px; padding: 3px 8px; font-size: 10px; font-weight: 800; }
+        .std-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .std-card { background: linear-gradient(135deg, rgba(20,26,38,0.7) 0%, rgba(12,16,25,0.7) 100%); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 16px 14px; text-decoration: none; color: #d1d9e6; display: flex; flex-direction: column; justify-content: space-between; height: 110px; transition: all 0.25s; }
+        .std-card:hover { background: rgba(255,255,255,0.06); border-color: rgba(79,195,247,0.4); color: #fff; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.4); }
+        .std-card-top { display: flex; justify-content: space-between; align-items: center; }
+        .std-icon { font-size: 24px; }
+        .std-title { font-size: 14px; font-weight: 800; color: #fff; margin-top: 8px; }
+        .std-sub { font-size: 10px; color: #7e8b9b; margin-top: 2px; }
+        .sec-bar { margin-top: 24px; background: rgba(61,220,132,0.06); border: 1px solid rgba(61,220,132,0.2); border-radius: 14px; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; font-size: 11px; color: #3ddc84; font-weight: 700; }
+        .page-footer { text-align: center; padding: 24px 16px; font-size: 11px; color: #4a5568; border-top: 1px solid rgba(255,255,255,0.05); margin-top: 20px; }
+    </style>
+<body>
+<div class="app-wrapper">
+    <header class="header">
+        <div class="logo-area">
+            <div class="logo-badge">👑</div>
+            <span class="logo-title">GOKU ELITE VIP</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:10px;">
+            <span class="vip-tag">VIP ELITE</span>
+            <button class="btn-logout" onclick="logout()">Exit</button>
+        </div>
+    </header>
+
+    <div class="content">
+        <div class="vip-hero">
+            <div class="vip-hero-top">
+                <div class="vip-hero-title">✦ ELITE CONTROL CENTER</div>
+                <div class="vip-hero-status">
+                    <span class="live-dot"></span> ENGINES ACTIVE
+                </div>
+            </div>
+            <div class="vip-metrics">
+                <div class="metric-card">
+                    <div class="metric-lbl">Plan Access</div>
+                    <div class="metric-val gold" id="dispPlan">ELITE MASTER</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-lbl">Device ID</div>
+                    <div class="metric-val" id="dispDevId">BOUND</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-lbl">License Exp</div>
+                    <div class="metric-val">LIFETIME</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="quick-actions">
+            <a href="ewingo_1m.html" id="quickLaunchBtn" class="action-btn">
+                <span class="action-icon">🚀</span>
+                <span>Resume Last Game</span>
+            </a>
+            <a href="https://t.me/BN_OWNER" target="_blank" class="action-btn">
+                <span class="action-icon">✈️</span>
+                <span>VIP Telegram</span>
+            </a>
+        </div>
+
+        <div class="section-header">
+            <div class="section-title">👑 Exclusive VIP Engines</div>
+            <span style="font-size:10px;color:#f5b342;font-weight:700;">UNLOCKED</span>
+        </div>
+        <div class="elite-grid">
+            <a href="ewingo_1m.html" class="elite-card" data-slug="ewingo_1m.html">
+                <div class="elite-card-icon">👑</div>
+                <div class="elite-card-info">
+                    <div class="elite-card-title">ELITE WINGO 1M <span class="gold-badge">10 ENGINES</span></div>
+                    <div class="elite-card-sub">V1-V10 Multi-Model Bypass + Neural Voice Announcer</div>
+                </div>
+            </a>
+            <a href="etrx_1m.html" class="elite-card" data-slug="etrx_1m.html">
+                <div class="elite-card-icon" style="background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);">🔷</div>
+                <div class="elite-card-info">
+                    <div class="elite-card-title">ELITE TRX 1M <span class="gold-badge">TRX MATRIX</span></div>
+                    <div class="elite-card-sub">High-Precision Hash Engine & Bypass Consensus</div>
+                </div>
+            </a>
+        </div>
+
+        <div class="section-header">
+            <div class="section-title">⚡ Standard Prediction Engines</div>
+        </div>
+        <div class="std-grid">
+            <a href="wingo_1m.html" class="std-card" data-slug="wingo_1m.html">
+                <div class="std-card-top">
+                    <span class="std-icon">🎯</span>
+                    <span style="font-size:10px;color:#3ddc84;font-weight:700;">ONLINE</span>
+                </div>
+                <div><div class="std-title">WINGO 1M</div><div class="std-sub">1 Min Round Engine</div></div>
+            </a>
+            <a href="wingo_30s.html" class="std-card" data-slug="wingo_30s.html">
+                <div class="std-card-top">
+                    <span class="std-icon">⚡</span>
+                    <span style="font-size:10px;color:#3ddc84;font-weight:700;">ONLINE</span>
+                </div>
+                <div><div class="std-title">WINGO 30S</div><div class="std-sub">30s Speed Engine</div></div>
+            </a>
+            <a href="k3_1m.html" class="std-card" data-slug="k3_1m.html">
+                <div class="std-card-top">
+                    <span class="std-icon">🎲</span>
+                    <span style="font-size:10px;color:#3ddc84;font-weight:700;">ONLINE</span>
+                </div>
+                <div><div class="std-title">K3 1M</div><div class="std-sub">Dice Sum Tracker</div></div>
+            </a>
+            <a href="trx_1m.html" class="std-card" data-slug="trx_1m.html">
+                <div class="std-card-top">
+                    <span class="std-icon">💎</span>
+                    <span style="font-size:10px;color:#3ddc84;font-weight:700;">ONLINE</span>
+                </div>
+                <div><div class="std-title">TRX 1M</div><div class="std-sub">1 Min Hash Engine</div></div>
+            </a>
+        </div>
+
+        <div class="sec-bar">
+            <span>🛡️ HARDENED ANTI-DEBUGGER ACTIVE</span>
+            <span>AES-XOR VIP CONNECTED</span>
+        </div>
+    </div>
+
+    <div class="page-footer">
+        GOKU ELITE VIP CONTROL CENTER &copy; 2026
+    </div>
+</div>
+
+<script>
+    function logout() {
+        sessionStorage.clear();
+        localStorage.clear();
+        document.cookie = "bn_auth_session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        window.location.replace('login.html');
+    }
+
+    window.addEventListener('load', function() {
+        const devId = localStorage.getItem('bn_device_serial');
+        if (devId && document.getElementById('dispDevId')) {
+            document.getElementById('dispDevId').innerText = devId.substr(0, 8) + '...';
+        }
+        const lastGame = localStorage.getItem('bn_last_game') || 'ewingo_1m.html';
+        const qlBtn = document.getElementById('quickLaunchBtn');
+        if (qlBtn) qlBtn.href = lastGame;
+
+        document.querySelectorAll('a[data-slug]').forEach(function(el) {
+            el.addEventListener('click', function() {
+                localStorage.setItem('bn_last_game', this.getAttribute('href'));
+            });
+        });
+    });
+</script>
+</body>
+</html>

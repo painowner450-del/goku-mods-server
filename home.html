@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>GOKU MODS - DASHBOARD</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="js/security.js"></script>
+    <script src="js/guard.js"></script>
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        :root {
+            --bg-deep: #06070d;
+            --panel: rgba(14, 18, 30, 0.72);
+            --line-strong: rgba(120, 220, 255, 0.22);
+            --text: #e7f3ff;
+            --muted: #6b7d99;
+            --neon-cyan: #00f0ff;
+            --neon-purple: #b853ff;
+            --neon-pink: #ff3c8e;
+            --radius: 18px;
+            --shadow: 0 20px 60px rgba(0, 240, 255, 0.18), 0 0 0 1px rgba(0, 240, 255, 0.06);
+        }
+        body { font-family: "Inter", sans-serif; background: var(--bg-deep); color: var(--text); user-select: none; min-height: 100vh; }
+        body::before { content: ""; position: fixed; inset: 0; background: radial-gradient(circle at 12% 18%, rgba(184, 83, 255, 0.18), transparent 42%), radial-gradient(circle at 88% 82%, rgba(0, 240, 255, 0.18), transparent 42%), radial-gradient(circle at 50% 50%, rgba(255, 60, 142, 0.10), transparent 55%); pointer-events: none; z-index: 0; }
+        .container { position: relative; z-index: 10; max-width: 600px; margin: 0 auto; padding: 20px; padding-top: 40px; }
+        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .user-info h2 { font-size: 1.2rem; font-weight: 900; background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 2px; }
+        .user-info p { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+        .plan-badge { background: rgba(184, 83, 255, 0.15); border: 1px solid var(--neon-purple); padding: 6px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: 800; color: var(--neon-purple); letter-spacing: 1px; box-shadow: 0 0 10px rgba(184, 83, 255, 0.3); }
+        .section-title { font-size: 0.8rem; color: var(--muted); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px; margin-top: 24px; font-weight: 700; }
+        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+        .game-card { background: var(--panel); border: 1px solid var(--line-strong); border-radius: 16px; padding: 20px; text-align: center; cursor: pointer; transition: 0.3s; position: relative; overflow: hidden; backdrop-filter: blur(10px); display: flex; flex-direction: column; align-items: center; gap: 10px; text-decoration: none; }
+        .game-card:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0, 240, 255, 0.2); border-color: var(--neon-cyan); }
+        .game-card.locked { opacity: 0.6; cursor: not-allowed; border-color: rgba(255, 255, 255, 0.1); }
+        .game-card.locked:hover { transform: none; box-shadow: none; border-color: rgba(255, 255, 255, 0.1); }
+        .game-icon { width: 48px; height: 48px; border-radius: 12px; background: rgba(0, 240, 255, 0.1); display: flex; align-items: center; justify-content: center; font-size: 24px; border: 1px solid rgba(0, 240, 255, 0.3); margin-bottom: 5px; }
+        .game-card.locked .game-icon { background: rgba(255, 255, 255, 0.05); border-color: rgba(255, 255, 255, 0.1); filter: grayscale(100%); }
+        .game-name { color: var(--text); font-weight: 800; font-size: 0.9rem; letter-spacing: 1px; text-transform: uppercase; }
+        .status-pill { padding: 4px 10px; border-radius: 12px; font-size: 0.65rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+        .status-pill.unlocked { background: rgba(0, 230, 118, 0.15); color: #00e676; border: 1px solid rgba(0, 230, 118, 0.3); }
+        .status-pill.locked { background: rgba(255, 56, 96, 0.15); color: #ff3860; border: 1px solid rgba(255, 56, 96, 0.3); }
+        .elite-section { margin-top: 30px; border-top: 1px dashed rgba(255, 255, 255, 0.1); padding-top: 20px; }
+        .elite-title { color: var(--neon-pink); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 3px; font-weight: 900; margin-bottom: 16px; text-shadow: 0 0 10px rgba(255, 60, 142, 0.5); text-align: center; }
+        .logout-btn { display: block; margin: 40px auto; background: transparent; border: 1px solid rgba(255, 56, 96, 0.5); color: #ff3860; padding: 10px 24px; border-radius: 20px; font-family: inherit; font-weight: 700; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; font-size: 0.75rem; }
+        .logout-btn:hover { background: rgba(255, 56, 96, 0.1); box-shadow: 0 0 15px rgba(255, 56, 96, 0.3); }
+    .v2-home-strip{display:flex;justify-content:space-between;gap:12px;align-items:center;margin:18px 0 12px;padding:14px 16px;border:1px solid rgba(124,140,255,.22);border-radius:18px;background:linear-gradient(135deg,rgba(102,119,255,.12),rgba(57,215,255,.05));font-weight:900;letter-spacing:1px}.v2-home-strip small{color:#7f8ca9;font-weight:600;letter-spacing:0}
+    </style>
+<link rel="stylesheet" href="css/goku-ui.css"><link rel="stylesheet" href="css/goku-v2.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header-top">
+            <div class="user-info">
+                <h2>GOKU DASHBOARD</h2>
+                <p>Welcome back, Commander</p>
+            </div>
+            <div class="plan-badge" id="planBadge">LOADING...</div>
+        </div>
+
+        <div class="v2-home-strip"><span>COMMAND CONSOLE</span><small>Live modules · unified interface</small></div>
+
+        <div class="section-title">Standard Operations</div>
+        <div class="grid" id="standardGames">
+            <!-- Dynamically injected -->
+        </div>
+
+        <div class="elite-section" id="eliteSection">
+            <div class="elite-title">✦ ELITE COMMAND CENTER ✦</div>
+            <div class="grid" id="eliteGames">
+                <!-- Dynamically injected -->
+            </div>
+        </div>
+
+        <button class="logout-btn" onclick="logout()">Terminate Session</button>
+    </div>
+
+    <script>
+        const userPlan = localStorage.getItem('bn_plan') || 'NONE';
+        if (userPlan === 'NONE') {
+            window.location.replace('login.html');
+        }
+
+        document.getElementById('planBadge').textContent = `PLAN: ${userPlan}`;
+
+        // Define access levels
+        const accessMap = {
+            'STARTER': ['wingo_1m'],
+            'PLUS': ['wingo_1m', 'wingo_30s', 'k3_1m'],
+            'PRO': ['wingo_1m', 'wingo_30s', 'k3_1m', 'trx_1m'],
+            'ELITE': ['wingo_1m', 'wingo_30s', 'k3_1m', 'trx_1m', 'elite_wingo_1m', 'elite_trx_1m']
+        };
+
+        const userAccess = accessMap[userPlan] || [];
+
+        const allStandardGames = [
+            { id: 'wingo_1m', name: 'WINGO 1M', icon: '⏱️', url: 'wingo_1m.html' },
+            { id: 'wingo_30s', name: 'WINGO 30S', icon: '⚡', url: 'wingo_30s.html' },
+            { id: 'k3_1m', name: 'K3 1M', icon: '🎲', url: 'k3_1m.html' },
+            { id: 'trx_1m', name: 'TRX 1M', icon: '💎', url: 'trx_1m.html' }
+        ];
+
+        const allEliteGames = [
+            { id: 'elite_wingo_1m', name: 'ELITE WINGO', icon: '👑', url: 'elite_wingo_1m.html' },
+            { id: 'elite_trx_1m', name: 'ELITE TRX', icon: '💠', url: 'elite_trx_1m.html' }
+        ];
+
+        function createCard(game) {
+            const isUnlocked = userAccess.includes(game.id);
+            const statusClass = isUnlocked ? 'unlocked' : 'locked';
+            const statusText = isUnlocked ? 'OPEN' : 'LOCKED';
+            const link = isUnlocked ? game.url : '#';
+            
+            return `
+                <a href="${link}" class="game-card ${!isUnlocked ? 'locked' : ''}">
+                    <div class="game-icon">${game.icon}</div>
+                    <div class="game-name">${game.name}</div>
+                    <div class="status-pill ${statusClass}">${statusText}</div>
+                </a>
+            `;
+        }
+
+        const standardContainer = document.getElementById('standardGames');
+        allStandardGames.forEach(game => {
+            standardContainer.innerHTML += createCard(game);
+        });
+
+        const eliteContainer = document.getElementById('eliteGames');
+        if (userPlan === 'ELITE') {
+            allEliteGames.forEach(game => {
+                eliteContainer.innerHTML += createCard(game);
+            });
+        } else {
+            eliteContainer.innerHTML = `
+                <div style="grid-column: span 2; text-align: center; color: #6b7d99; font-size: 0.8rem; padding: 20px; background: rgba(255,255,255,0.02); border-radius: 12px;">
+                    Elite access requires an upgraded license key.<br>Contact administrator to elevate privileges.
+                </div>
+            `;
+        }
+
+        function logout() {
+            sessionStorage.clear();
+            localStorage.clear();
+            document.cookie = "bn_auth_session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+            window.location.replace('login.html');
+        }
+    </script>
+<script src="js/goku-v2.js"></script>
+</body>
+</html>

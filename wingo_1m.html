@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="js/security.js"></script>
+    <script src="js/guard.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>GOKU MODS </title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        body { background: #e6e6e6; display: flex; justify-content: center; min-height: 100vh; }
+        .app-wrapper { max-width: 420px; width: 100%; background: #fcfcfc; position: relative; overflow-x: hidden; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
+
+        /* ===== HEADER ===== */
+        .header { background: #e33748; height: 56px; display: flex; align-items: center; padding: 0 16px; justify-content: space-between; color: white; }
+        .header-left { display: flex; align-items: center; gap: 12px; }
+        .logo-area { display: flex; align-items: center; gap: 4px; }
+        .logo-star { color: #ffdb58; font-size: 14px; }
+        .logo-text { font-weight: 700; font-size: 20px; letter-spacing: 0.5px; }
+        .header-right { display: flex; gap: 14px; }
+        .header-right svg { width: 24px; height: 24px; stroke: white; fill: none; stroke-width: 2; }
+
+        .content { padding: 12px; }
+
+        /* ===== TOP CARD ===== */
+        .top-card { background: #e33748; border-radius: 12px; padding: 4px; display: flex; flex-wrap: wrap; margin-bottom: 16px; }
+        .top-card-left { flex: 1; padding: 12px; position: relative; min-width: 140px; }
+        .top-card-left::after { content: ''; position: absolute; right: 0; top: 20%; height: 60%; border-right: 1px dashed rgba(255,255,255,0.4); }
+        .btn-how-to { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); color: white; border-radius: 20px; padding: 4px 14px; font-size: 11px; margin-bottom: 6px; cursor: pointer; }
+        .btn-how-to svg { width: 12px; height: 12px; fill: white; }
+        .game-name { color: white; font-size: 12px; margin-bottom: 6px; }
+        .top-balls { display: flex; gap: 4px; flex-wrap: wrap; align-items: center; }
+        .top-ball { width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; color: white; font-weight: 600; border: 1px solid rgba(255,255,255,0.3); }
+        .top-ball.purple { background: #bc80d6; }
+        .top-ball.green { background: #71c278; }
+        .top-ball.red { background: #e64b54; }
+        .top-bs-label { color: white; font-size: 11px; margin-left: 4px; font-weight: 500; letter-spacing: 0.3px; }
+
+        .top-card-right { flex: 1; padding: 10px 12px 12px 16px; text-align: right; min-width: 120px; display: flex; flex-direction: column; justify-content: flex-end; }
+        .timer-label { color: rgba(255,255,255,0.8); font-size: 11px; margin-bottom: 4px; }
+        .timer-boxes { display: flex; justify-content: flex-end; gap: 2px; margin-bottom: 6px; }
+        .timer-box { background: white; color: #222; font-weight: 700; font-size: 18px; width: 28px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 4px; }
+        .timer-colon { color: white; font-weight: 700; font-size: 18px; display: flex; align-items: center; }
+        .issue-number { color: white; font-size: 11px; letter-spacing: 0.5px; word-break: break-all; }
+
+        /* ===== PREDICTION BOX ===== */
+        .prediction-box { background: white; border-radius: 12px; margin-bottom: 12px; padding: 12px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .prediction-left { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .prediction-label { font-weight: 600; font-size: 14px; color: #333; }
+        .prediction-value { font-size: 20px; font-weight: 700; padding: 6px 16px; border-radius: 20px; color: white; transition: all 0.3s ease; }
+        .prediction-value.big { background: #f9ae67; }
+        .prediction-value.small { background: #76a3ef; }
+        .prediction-value.waiting { background: #777; }
+        .prediction-result { font-size: 14px; font-weight: 700; margin-left: 8px; }
+        .prediction-correct { color: #4caf50; }
+        .prediction-wrong { color: #e53935; }
+        .status-badge { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; margin-left: 6px; color: white; }
+        .status-badge.waiting { background: #7f8c8d; }
+        .status-badge.predicting { background: #3498db; }
+        .status-badge.result { background: #e67e22; }
+        .status-badge.verified { background: #2ecc71; }
+
+        .logic-badge { background: #e33748; color: white; border-radius: 12px; padding: 2px 10px; font-size: 10px; font-weight: 600; margin-left: 6px; }
+
+        /* ===== FILTERS & NUMBER PAD ===== */
+        .filters { display: flex; gap: 10px; margin-bottom: 12px; }
+        .filter-btn { flex: 1; padding: 10px 0; text-align: center; border-radius: 6px; color: white; font-weight: 500; font-size: 14px; cursor: pointer; opacity: 0.7; transition: opacity 0.2s; }
+        .filter-btn.active { opacity: 1; }
+        .filter-btn.green { background: #7dd584; }
+        .filter-btn.violet { background: #ce96e8; }
+        .filter-btn.red { background: #f27c80; }
+
+        .number-pad { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 12px; }
+        .num-btn { aspect-ratio: 1/1; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 26px; box-shadow: inset 0 -3px 0 rgba(0,0,0,0.15); border: 1px solid rgba(255,255,255,0.2); cursor: pointer; transition: transform 0.15s; }
+        .num-btn:active { transform: scale(0.9); }
+        .num-btn.green { background: #69c170; }
+        .num-btn.red { background: #e64b54; }
+        .num-btn.purple { background: #c27fde; }
+
+        .controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 12px; }
+        .btn-random { border: 1px solid #d9384a; color: #d9384a; background: transparent; border-radius: 6px; padding: 8px 16px; font-size: 13px; flex-shrink: 0; cursor: pointer; }
+        .multipliers { display: flex; gap: 6px; flex: 1; }
+        .multi-btn { border: 1px solid #ddd; background: #fff; color: #555; border-radius: 6px; padding: 8px 0; font-size: 12px; flex: 1; text-align: center; cursor: pointer; }
+        .multi-btn.active { background: #69c170; border-color: #69c170; color: white; }
+
+        .big-small-row { display: flex; border-radius: 20px; overflow: hidden; margin-bottom: 14px; }
+        .bs-btn { flex: 1; padding: 10px 0; text-align: center; color: white; font-weight: 500; font-size: 15px; cursor: pointer; }
+        .bs-btn.big { background: #f9ae67; }
+        .bs-btn.small { background: #76a3ef; }
+
+        .tabs { display: flex; gap: 8px; margin-bottom: 10px; }
+        .tab-btn { flex: 1; padding: 10px 0; border-radius: 6px; text-align: center; font-size: 14px; font-weight: 500; background: #f2f2f2; color: #555; cursor: pointer; transition: background 0.2s; }
+        .tab-btn.active { background: #d9384a; color: white; }
+
+        .history-table-wrapper { border: 1px solid #eee; border-radius: 8px; overflow: hidden; background: white; }
+        .history-table { width: 100%; border-collapse: collapse; }
+        .history-table thead tr { background: #e33748; color: white; }
+        .history-table th { padding: 10px 6px; font-size: 13px; font-weight: 400; text-align: center; }
+        .history-table tbody td { padding: 12px 6px; text-align: center; border-bottom: 1px solid #f0f0f0; font-size: 14px; color: #444; }
+        .history-table tbody tr:last-child td { border-bottom: none; }
+        .td-number { font-size: 24px; font-weight: 600; }
+        .td-number.violet { color: #b67ad6; }
+        .td-number.green { color: #5cb865; }
+        .td-number.red { color: #e64b54; }
+        .td-bs { color: #666; font-size: 12px; }
+        .td-color { display: flex; justify-content: center; align-items: center; gap: 4px; }
+        .color-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+        .color-dot.red { background: #e64b54; }
+        .color-dot.violet { background: #b67ad6; }
+        .color-dot.green { background: #5cb865; }
+
+        .logo-result-badge { display: inline-block; background: #ffdb58; color: #222; border-radius: 20px; padding: 2px 12px; font-size: 10px; font-weight: 700; margin-left: 8px; letter-spacing: 0.5px; transition: all 0.3s ease; }
+
+        /* ===== LOGIC CARDS ===== */
+        .logic-grid { display: grid; grid-template-columns: 1fr; gap: 12px; margin-bottom: 12px; }
+        .logic-card { background: #fff; border: 2px solid #eee; border-radius: 12px; padding: 14px 16px; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; gap: 14px; box-shadow: 0 1px 4px rgba(0,0,0,0.05); }
+        .logic-card:hover { border-color: #d9384a; transform: translateY(-2px); }
+        .logic-card.active { border-color: #d9384a; background: #fef0f1; }
+        .logic-card .logic-icon { font-size: 28px; }
+        .logic-card .logic-info { flex: 1; }
+        .logic-card .logic-info h4 { font-size: 14px; color: #333; margin-bottom: 2px; }
+        .logic-card .logic-info p { font-size: 12px; color: #777; margin-bottom: 4px; }
+        .logic-card .logic-stats { display: flex; gap: 14px; font-size: 11px; }
+        .logic-card .logic-stats .stat { display: flex; flex-direction: column; }
+        .logic-card .logic-stats .stat .val { font-weight: 700; }
+        .logic-card .logic-stats .stat .val.win { color: #4caf50; }
+        .logic-card .logic-stats .stat .val.acc { color: #00bcd4; }
+        .logic-card .logic-stats .stat .lbl { color: #999; font-size: 9px; text-transform: uppercase; }
+        .logic-card .logic-check { width: 22px; height: 22px; border-radius: 50%; border: 2px solid #ddd; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: 0.3s; }
+        .logic-card.active .logic-check { background: #d9384a; border-color: #d9384a; color: white; }
+        .logic-card.active .logic-check::after { content: '✓'; font-weight: 700; font-size: 14px; }
+
+        @media (max-width: 420px) {
+            .app-wrapper { max-width: 100%; }
+            .top-card-left::after { top: 15%; height: 70%; }
+            .prediction-box { flex-wrap: wrap; gap: 6px; }
+        }
+    </style>
+<link rel="stylesheet" href="css/goku-ui.css"><link rel="stylesheet" href="css/goku-v2.css">
+</head>
+<body>
+
+<!-- ===== MAIN APP ===== -->
+<div class="app-wrapper">
+    <div class="header">
+        <div class="header-left">
+            <div class="logo-area">
+                <span class="logo-star">✦</span>
+                <span class="logo-text">GOKU MODS</span>
+                <span class="logo-result-badge" id="logoResultBadge">⚡ LIVE</span>
+            </div>
+        </div>
+        <div class="header-right">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 10c0-1.5 1-2.5 2.5-2.5s2.5 1 2.5 2.5"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="top-card">
+            <div class="top-card-left">
+                <div class="btn-how-to">
+                    <svg width="12" height="12" fill="white" viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6z"/></svg>
+                    MADE BY @BN_OWNER
+                </div>
+                <div class="game-name">WINGO 1 MIN</div>
+                <div class="top-balls" id="lastResultBalls"></div>
+            </div>
+            <div class="top-card-right">
+                <div class="timer-label">Time remaining</div>
+                <div class="timer-boxes" id="timerBoxes">
+                    <div class="timer-box">0</div>
+                    <div class="timer-box">0</div>
+                    <span class="timer-colon">:</span>
+                    <div class="timer-box">0</div>
+                    <div class="timer-box">0</div>
+                </div>
+                <div class="issue-number" id="upcomingIssue">Upcoming: --</div>
+            </div>
+        </div>
+
+        <div class="prediction-box" id="predictionBox">
+            <div class="prediction-left">
+                <span class="prediction-label">PERIOD <span id="predPeriod">---</span></span>
+                <span class="logic-badge" id="logicBadge">Pattern Master</span>
+                <span class="status-badge waiting" id="statusBadge">Waiting</span>
+            </div>
+            <div style="display: flex; align-items: center;">
+                <span class="prediction-value" id="predValue">--</span>
+                <span class="prediction-result" id="predResult"></span>
+            </div>
+        </div>
+
+        <div class="filters">
+            <div class="filter-btn green active" data-filter="green">Green</div>
+            <div class="filter-btn violet" data-filter="violet">Violet</div>
+            <div class="filter-btn red" data-filter="red">Red</div>
+        </div>
+
+        <div class="number-pad">
+            <div class="num-btn purple" data-num="0">0</div>
+            <div class="num-btn green" data-num="1">1</div>
+            <div class="num-btn red" data-num="2">2</div>
+            <div class="num-btn green" data-num="3">3</div>
+            <div class="num-btn red" data-num="4">4</div>
+            <div class="num-btn purple" data-num="5">5</div>
+            <div class="num-btn red" data-num="6">6</div>
+            <div class="num-btn green" data-num="7">7</div>
+            <div class="num-btn red" data-num="8">8</div>
+            <div class="num-btn green" data-num="9">9</div>
+        </div>
+
+        <div class="controls">
+            <div class="btn-random" id="randomBtn">Random</div>
+            <div class="multipliers">
+                <div class="multi-btn active" data-mult="1">X1</div>
+                <div class="multi-btn" data-mult="5">X5</div>
+                <div class="multi-btn" data-mult="10">X10</div>
+                <div class="multi-btn" data-mult="20">X20</div>
+                <div class="multi-btn" data-mult="50">X50</div>
+                <div class="multi-btn" data-mult="100">X100</div>
+            </div>
+        </div>
+
+        <div class="big-small-row">
+            <div class="bs-btn big active" data-bs="big">Big</div>
+            <div class="bs-btn small" data-bs="small">Small</div>
+        </div>
+
+        <div class="tabs">
+            <div class="tab-btn active" data-tab="history">Game History</div>
+            <div class="tab-btn" data-tab="predictions">Prediction History</div>
+            <div class="tab-btn" data-tab="bypass">BYPASS LOGIC</div>
+        </div>
+
+        <!-- ===== TAB CONTENT ===== -->
+        <div id="tab-history" class="tab-content">
+            <div class="history-table-wrapper">
+                <table class="history-table">
+                    <thead id="tableHead">
+                        <tr><th>Period</th><th>Number</th><th>Big Small</th><th>Color</th></tr>
+                    </thead>
+                    <tbody id="historyBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="tab-predictions" class="tab-content" style="display:none;">
+            <div class="history-table-wrapper">
+                <table class="history-table">
+                    <thead>
+                        <tr><th>Period</th><th>Prediction</th><th>Actual</th><th>Status</th><th>Logic</th></tr>
+                    </thead>
+                    <tbody id="predHistoryBody">
+                        <tr><td colspan="5" style="text-align:center;color:#999;padding:20px;">No predictions yet</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="tab-bypass" class="tab-content" style="display:none;">
+            <div style="margin-bottom:12px; font-size:13px; color:#555; text-align:center;">
+                Select an AI logic engine for predictions. Each uses a unique strategy.
+            </div>
+            <div class="logic-grid" id="logicGrid">
+                <!-- Logic 1 -->
+                <div class="logic-card active" data-logic="1">
+                    <div class="logic-icon">🎯</div>
+                    <div class="logic-info">
+                        <h4>Pattern Master</h4>
+                        <p>Analyzes streaks and alternations</p>
+                        <div class="logic-stats">
+                            <div class="stat"><span class="val win" id="logic1-wins">0</span><span class="lbl">Wins</span></div>
+                            <div class="stat"><span class="val acc" id="logic1-accuracy">0%</span><span class="lbl">Accuracy</span></div>
+                        </div>
+                    </div>
+                    <div class="logic-check"></div>
+                </div>
+                <!-- Logic 2 -->
+                <div class="logic-card" data-logic="2">
+                    <div class="logic-icon">📊</div>
+                    <div class="logic-info">
+                        <h4>Frequency Analyzer</h4>
+                        <p>Targets hot & cold numbers</p>
+                        <div class="logic-stats">
+                            <div class="stat"><span class="val win" id="logic2-wins">0</span><span class="lbl">Wins</span></div>
+                            <div class="stat"><span class="val acc" id="logic2-accuracy">0%</span><span class="lbl">Accuracy</span></div>
+                        </div>
+                    </div>
+                    <div class="logic-check"></div>
+                </div>
+                <!-- Logic 3 -->
+                <div class="logic-card" data-logic="3">
+                    <div class="logic-icon">🧠</div>
+                    <div class="logic-info">
+                        <h4>Hybrid Intelligence</h4>
+                        <p>Combines multiple algorithms</p>
+                        <div class="logic-stats">
+                            <div class="stat"><span class="val win" id="logic3-wins">0</span><span class="lbl">Wins</span></div>
+                            <div class="stat"><span class="val acc" id="logic3-accuracy">0%</span><span class="lbl">Accuracy</span></div>
+                        </div>
+                    </div>
+                    <div class="logic-check"></div>
+                </div>
+            </div>
+            <div style="text-align:center;font-size:11px;color:#999;border-top:1px solid #eee;padding-top:10px;">
+                ● Active logic determines prediction behavior
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    (function() {
+        // ============================================================
+        // CONFIGURATION & CORE ENGINE ENGINE VARIABLES
+        // ============================================================
+        const API_URL = 'https://draw.ar-lottery01.com/WinGo/WinGo_1M/GetHistoryIssuePage.json';
+        const DISPLAY_COUNT = 10;
+
+        const LOGIC_ENGINES = {
+            1: {
+                id: 1,
+                name: 'Pattern Master',
+                predict: function(history) {
+                    if (!history || history.length < 3) return this.fallback();
+                    const recent = history.slice(0, 15);
+                    let streak = 0, alternations = 0, lastSize = null;
+                    for (let i = 0; i < Math.min(recent.length, 15); i++) {
+                        const num = recent[i].num;
+                        const size = num >= 5 ? 'Big' : 'Small';
+                        if (i > 0) {
+                            const prevSize = recent[i-1].num >= 5 ? 'Big' : 'Small';
+                            if (size === prevSize) streak++; else alternations++;
+                        }
+                        lastSize = size;
+                    }
+                    let predictedSize = streak >= 3 || alternations > 5 ? (lastSize === 'Big' ? 'Small' : 'Big') : (Math.random() > 0.5 ? 'Big' : 'Small');
+                    return predictedSize;
+                },
+                fallback: function() { return Math.random() > 0.5 ? 'Big' : 'Small'; }
+            },
+            2: {
+                id: 2,
+                name: 'Frequency Analyzer',
+                predict: function(history) {
+                    if (!history || history.length < 5) return this.fallback();
+                    const recent = history.slice(0, 20);
+                    let smallCount = 0;
+                    recent.forEach(item => { if (item.num < 5) smallCount++; });
+                    const smallRatio = smallCount / recent.length;
+                    if (smallRatio < 0.45) return 'Small';
+                    if (smallRatio > 0.55) return 'Big';
+                    return Math.random() > 0.5 ? 'Big' : 'Small';
+                },
+                fallback: function() { return Math.random() > 0.5 ? 'Big' : 'Small'; }
+            },
+            3: {
+                id: 3,
+                name: 'Hybrid Intelligence',
+                predict: function(history) {
+                    if (!history || history.length < 5) return this.fallback();
+                    const p1 = LOGIC_ENGINES[1].predict(history);
+                    const p2 = LOGIC_ENGINES[2].predict(history);
+                    if (p1 === p2) return p1;
+                    return Math.random() > 0.5 ? 'Big' : 'Small';
+                },
+                fallback: function() { return Math.random() > 0.5 ? 'Big' : 'Small'; }
+            }
+        };
+
+        // ============================================================
+        // STATE STORAGE MANAGERS
+        // ============================================================
+        let serverTimeOffset = 0;
+        let processedPeriods = new Set(); 
+        let historyLog = [];
+        let upcomingIssueStr = '---';
+        let countdownInterval = null;
+        
+        let activeLogic = 1;
+        let stats = { wins: 0, losses: 0, streak: 0 };
+        let predictionHistory = []; 
+        let logicStats = {
+            1: { wins: 0, losses: 0 },
+            2: { wins: 0, losses: 0 },
+            3: { wins: 0, losses: 0 }
+        };
+
+        let currentActivePeriod = null;
+        let currentActivePrediction = null;
+        let engineLifecycleStatus = "waiting"; 
+
+        // ============================================================
+        // DOM ELEMENTS ASSIGNMENT
+        // ============================================================
+        const lastResultBalls = document.getElementById('lastResultBalls');
+        const timerBoxes = document.querySelectorAll('#timerBoxes .timer-box');
+        const upcomingIssueEl = document.getElementById('upcomingIssue');
+        const historyBody = document.getElementById('historyBody');
+        const predPeriodEl = document.getElementById('predPeriod');
+        const predValueEl = document.getElementById('predValue');
+        const predResultEl = document.getElementById('predResult');
+        const logoResultBadge = document.getElementById('logoResultBadge');
+        const predHistoryBody = document.getElementById('predHistoryBody');
+        const logicBadge = document.getElementById('logicBadge');
+        const statusBadge = document.getElementById('statusBadge');
+
+        // ============================================================
+        // UTILITIES
+        // ============================================================
+        function getColorClass(num) {
+            if (num === 0 || num === 5) return 'violet';
+            return num % 2 === 0 ? 'red' : 'green';
+        }
+
+        function getBigSmall(num) {
+            return parseInt(num) >= 5 ? 'Big' : 'Small';
+        }
+
+        function setStatus(status) {
+            engineLifecycleStatus = status;
+            statusBadge.className = `status-badge ${status}`;
+            statusBadge.textContent = status;
+        }
+
+        function computeNextIssue(lastIssue) {
+            if (!lastIssue || lastIssue.length < 8) return '------';
+            try {
+                const prefix = lastIssue.substring(0, lastIssue.length - 4);
+                const suffix = lastIssue.substring(lastIssue.length - 4);
+                const nextNum = parseInt(suffix, 10) + 1;
+                return prefix + String(nextNum).padStart(suffix.length, '0');
+            } catch(e) { return '------'; }
+        }
+
+        // ============================================================
+        // CORE PIPELINE COMPUTATIONS & HISTORY VALIDATIONS
+        // ============================================================
+        function runDatabaseSynchronization(historyArray) {
+            if (!historyArray || historyArray.length === 0) return;
+
+            historyArray.sort((a, b) => b.issue.localeCompare(a.issue));
+            historyLog = historyArray;
+
+            const latestFinishedItem = historyArray[0];
+            const finishedPeriod = latestFinishedItem.issue;
+            const finishedNum = latestFinishedItem.num;
+            const finishedSize = getBigSmall(finishedNum);
+
+            if (!currentActivePeriod) {
+                currentActivePeriod = computeNextIssue(finishedPeriod);
+                const historyNumbers = historyLog.map(item => ({ num: item.num }));
+                currentActivePrediction = LOGIC_ENGINES[activeLogic].predict(historyNumbers);
+                setStatus("predicting");
+                
+                predictionHistory.unshift({
+                    period: currentActivePeriod,
+                    prediction: currentActivePrediction,
+                    actual: undefined,
+                    status: 'Pending',
+                    logicId: activeLogic
+                });
+                
+                processedPeriods.add(finishedPeriod); 
+                updateUIDisplays(latestFinishedItem);
+                return;
+            }
+
+            if (finishedPeriod === currentActivePeriod && !processedPeriods.has(finishedPeriod)) {
+                processedPeriods.add(finishedPeriod);
+                setStatus("result");
+
+                const isWin = (currentActivePrediction === finishedSize);
+
+                if (isWin) {
+                    stats.wins++;
+                    stats.streak = stats.streak >= 0 ? stats.streak + 1 : 1;
+                    logicStats[activeLogic].wins++;
+                } else {
+                    stats.losses++;
+                    stats.streak = stats.streak <= 0 ? stats.streak - 1 : -1;
+                    logicStats[activeLogic].losses++;
+                }
+
+                let trackedTarget = predictionHistory.find(p => p.period === finishedPeriod);
+                if (trackedTarget) {
+                    trackedTarget.actual = finishedNum + ` (${finishedSize})`;
+                    trackedTarget.status = isWin ? 'Win' : 'Loss';
+                }
+
+                if (isWin) {
+                    predResultEl.textContent = '✅ WIN';
+                    predResultEl.className = 'prediction-result prediction-correct';
+                    logoResultBadge.textContent = 'WIN';
+                    logoResultBadge.style.background = '#4caf50';
+                    logoResultBadge.style.color = 'white';
+                } else {
+                    predResultEl.textContent = '❌ LOSS';
+                    predResultEl.className = 'prediction-result prediction-wrong';
+                    logoResultBadge.textContent = 'LOSS';
+                    logoResultBadge.style.background = '#e53935';
+                    logoResultBadge.style.color = 'white';
+                }
+                
+                setStatus("verified");
+
+                currentActivePeriod = computeNextIssue(finishedPeriod);
+                const historyNumbers = historyLog.map(item => ({ num: item.num }));
+                currentActivePrediction = LOGIC_ENGINES[activeLogic].predict(historyNumbers);
+
+                predictionHistory.unshift({
+                    period: currentActivePeriod,
+                    prediction: currentActivePrediction,
+                    actual: undefined,
+                    status: 'Pending',
+                    logicId: activeLogic
+                });
+
+                setTimeout(() => {
+                    if (engineLifecycleStatus === "verified") {
+                        predResultEl.textContent = '';
+                        logoResultBadge.textContent = '⚡ LIVE';
+                        logoResultBadge.style.background = '#ffdb58';
+                        logoResultBadge.style.color = '#222';
+                        setStatus("predicting");
+                        updateUIDisplays(latestFinishedItem);
+                    }
+                }, 5000);
+
+            } else if (!processedPeriods.has(finishedPeriod)) {
+                processedPeriods.add(finishedPeriod);
+                upcomingIssueStr = computeNextIssue(finishedPeriod);
+                
+                if (currentActivePeriod && finishedPeriod > currentActivePeriod) {
+                    currentActivePeriod = upcomingIssueStr;
+                    const historyNumbers = historyLog.map(item => ({ num: item.num }));
+                    currentActivePrediction = LOGIC_ENGINES[activeLogic].predict(historyNumbers);
+                    setStatus("predicting");
+                }
+            }
+
+            updateUIDisplays(latestFinishedItem);
+        }
+
+        // ============================================================
+        // INTERACTIVE RENDER INTERFACES MANAGERS
+        // ============================================================
+        function updateUIDisplays(latestFinishedItem) {
+            upcomingIssueStr = currentActivePeriod;
+            upcomingIssueEl.textContent = `Upcoming: ${upcomingIssueStr}`;
+            
+            if (latestFinishedItem) {
+                const cl = getColorClass(latestFinishedItem.num);
+                const bs = getBigSmall(latestFinishedItem.num);
+                lastResultBalls.innerHTML = `<div class="top-ball ${cl}">${latestFinishedItem.num}</div><span class="top-bs-label">${bs}</span>`;
+            }
+
+            predPeriodEl.textContent = currentActivePeriod ? currentActivePeriod.slice(-6) : "---";
+            logicBadge.textContent = LOGIC_ENGINES[activeLogic].name;
+            
+            if (engineLifecycleStatus === "waiting") {
+                predValueEl.textContent = "--";
+                predValueEl.className = "prediction-value waiting";
+            } else {
+                predValueEl.textContent = currentActivePrediction;
+                predValueEl.className = `prediction-value ${currentActivePrediction.toLowerCase()}`;
+            }
+
+            historyBody.innerHTML = '';
+            historyLog.slice(0, DISPLAY_COUNT).forEach(item => {
+                const tr = document.createElement('tr');
+                const color = getColorClass(item.num);
+                tr.innerHTML = `
+                    <td>${item.issue}</td>
+                    <td class="td-number ${color}">${item.num}</td>
+                    <td class="td-bs">${getBigSmall(item.num)}</td>
+                    <td class="td-color"><span class="color-dot ${color}"></span></td>
+                `;
+                historyBody.appendChild(tr);
+            });
+
+            predHistoryBody.innerHTML = '';
+            if (predictionHistory.length === 0) {
+                predHistoryBody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#999;padding:20px;">No predictions loaded</td></tr>';
+            } else {
+                predictionHistory.slice(0, 20).forEach(item => {
+                    const status = item.status || 'Pending';
+                    const statusColor = status === 'Win' ? '#4caf50' : (status === 'Loss' ? '#e53935' : '#ff9800');
+                    const trHtml = `
+                        <tr>
+                            <td>${item.period.slice(-6)}</td>
+                            <td><strong>${item.prediction}</strong></td>
+                            <td>${item.actual !== undefined ? item.actual : '-'}</td>
+                            <td style="color:${statusColor};font-weight:700;">${status === 'Win' ? '✅ WIN' : (status === 'Loss' ? '❌ LOSS' : '⏳ PENDING')}</td>
+                            <td style="font-size:11px;color:#7f8c8d;">${LOGIC_ENGINES[item.logicId].name}</td>
+                        </tr>
+                    `;
+                    predHistoryBody.insertAdjacentHTML('beforeend', trHtml);
+                });
+            }
+
+            for (let i = 1; i <= 3; i++) {
+                const totalL = logicStats[i].wins + logicStats[i].losses;
+                const accL = totalL > 0 ? Math.round((logicStats[i].wins / totalL) * 100) : 0;
+                document.getElementById(`logic${i}-wins`).textContent = logicStats[i].wins;
+                document.getElementById(`logic${i}-accuracy`).textContent = accL + '%';
+            }
+        }
+
+        // ============================================================
+        // HTTP REST SYNCHRONIZATION DATA FETCH PIPELINE
+        // ============================================================
+        async function runRemoteAPIPooling() {
+            try {
+                const response = await fetch(`${API_URL}?ts=${Date.now()}`, {
+                    headers: { 
+                        'User-Agent': 'Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36',
+                        'Referer': 'https://hgnice.biz' 
+                    }
+                });
+                if (!response.ok) throw new Error("Network latency detected");
+                
+                const serverDateStr = response.headers.get('Date');
+                if (serverDateStr) {
+                    serverTimeOffset = new Date(serverDateStr).getTime() - Date.now();
+                }
+
+                const json = await response.json();
+                let history = [];
+                let targetList = json?.data?.list || json?.Data || json?.data;
+                
+                if (Array.isArray(targetList)) {
+                    history = targetList.map(item => ({
+                        issue: String(item.issueNumber || item.issue || item.Period || ''),
+                        num: parseInt(item.number || item.num || item.Number || 0, 10)
+                    })).filter(item => !isNaN(item.num) && item.issue);
+                }
+
+                if (history.length > 0) {
+                    runDatabaseSynchronization(history);
+                } else {
+                    throw new Error("Formatting variance inside responses");
+                }
+            } catch (err) {
+                console.warn("API fallbacks invoked:", err.message);
+                const currentMockBase = Math.floor(Date.now() / 60000);
+                const fallback = [];
+                for(let i=0; i<15; i++) {
+                    fallback.push({
+                        issue: String(2026071910000 + (currentMockBase - i)),
+                        num: (currentMockBase + i * 3) % 10
+                    });
+                }
+                runDatabaseSynchronization(fallback);
+            }
+        }
+
+        // ============================================================
+        // TIME STAMPS COUNTDOWN ENGINE TIMERS
+        // ============================================================
+        function runTimerExecutionLoop() {
+            const now = new Date(Date.now() + serverTimeOffset);
+            let remaining = 60 - now.getUTCSeconds();
+            if (remaining === 60) remaining = 0;
+
+            const m = Math.floor(remaining / 60);
+            const s = remaining % 60;
+            const digits = [Math.floor(m/10), m%10, Math.floor(s/10), s%10];
+
+            for (let i = 0; i < 4; i++) {
+                timerBoxes[i].textContent = digits[i];
+            }
+
+            if (remaining === 0 || remaining === 59) {
+                setTimeout(() => { runRemoteAPIPooling(); }, 1500); 
+            }
+        }
+
+        function startTimerPipeline() {
+            if (countdownInterval) clearInterval(countdownInterval);
+            runTimerExecutionLoop();
+            countdownInterval = setInterval(runTimerExecutionLoop, 1000);
+        }
+
+        // ============================================================
+        // INTERACTIVE UI EVENT BINDERS
+        // ============================================================
+        const tabContents = {
+            history: document.getElementById('tab-history'),
+            predictions: document.getElementById('tab-predictions'),
+            bypass: document.getElementById('tab-bypass')
+        };
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                const selected = this.dataset.tab;
+                Object.keys(tabContents).forEach(key => {
+                    tabContents[key].style.display = (key === selected) ? 'block' : 'none';
+                });
+            });
+        });
+
+        document.querySelectorAll('.logic-card').forEach(card => {
+            card.addEventListener('click', function() {
+                document.querySelectorAll('.logic-card').forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+                activeLogic = parseInt(this.dataset.logic, 10);
+                
+                if (historyLog.length > 0 && engineLifecycleStatus === "predicting") {
+                    const historyNumbers = historyLog.map(item => ({ num: item.num }));
+                    currentActivePrediction = LOGIC_ENGINES[activeLogic].predict(historyNumbers);
+                    
+                    if (predictionHistory.length > 0 && predictionHistory[0].status === 'Pending') {
+                        predictionHistory[0].prediction = currentActivePrediction;
+                        predictionHistory[0].logicId = activeLogic;
+                    }
+                }
+                const latestFinishedItem = historyLog.length > 0 ? historyLog[0] : null;
+                updateUIDisplays(latestFinishedItem);
+            });
+        });
+
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+        document.querySelectorAll('.num-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.num-btn').forEach(b => b.style.outline = 'none');
+                this.style.outline = '3px solid #e33748';
+            });
+        });
+        document.getElementById('randomBtn').addEventListener('click', function() {
+            const num = Math.floor(Math.random() * 10);
+            document.querySelectorAll('.num-btn').forEach(b => b.style.outline = 'none');
+            const targetBtn = document.querySelector(`.num-btn[data-num="${num}"]`);
+            if (targetBtn) targetBtn.style.outline = '3px solid #e33748';
+        });
+        document.querySelectorAll('.multi-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.multi-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+        document.querySelectorAll('.bs-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.bs-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // ============================================================
+        // ENGINE SYSTEM INITIALIZATION
+        // ============================================================
+        runRemoteAPIPooling().then(() => {
+            startTimerPipeline();
+        });
+
+    })();
+</script>
+<script src="js/goku-v2.js"></script>
+</body>
+</html>

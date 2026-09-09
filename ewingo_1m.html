@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="js/security.js"></script>
+    <script src="js/guard.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>GOKU ELITE · WINGO · VOICE</title>
+    <style>
+        /* ─── RESET & BASE ─── */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        body { background: #070b1a; display: flex; justify-content: center; min-height: 100vh; padding: 8px 0; }
+        .app-wrapper { max-width: 430px; width: 100%; background: radial-gradient(ellipse at 50% 0%, #141c3a 0%, #0a0f20 100%); position: relative; overflow-x: hidden; border-radius: 32px 32px 0 0; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9), inset 0 0 80px rgba(100, 140, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.06); }
+        .app-wrapper::-webkit-scrollbar { width: 3px; }
+        .app-wrapper::-webkit-scrollbar-track { background: transparent; }
+        .app-wrapper::-webkit-scrollbar-thumb { background: #3a5a9a; border-radius: 10px; }
+        /* ─── HEADER ─── */
+        .header { height: 68px; display: flex; align-items: center; padding: 0 20px; justify-content: space-between; background: linear-gradient(180deg, rgba(20, 30, 60, 0.95) 0%, rgba(10, 15, 30, 0.7) 100%); border-bottom: 1px solid rgba(255, 255, 255, 0.08); backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 20; }
+        .header-left { display: flex; align-items: center; gap: 10px; }
+        .logo-area { display: flex; align-items: center; gap: 8px; }
+        .logo-star { font-size: 20px; color: #fff; text-shadow: 0 0 20px rgba(255, 215, 100, 0.6), 0 0 60px rgba(255, 200, 80, 0.2); animation: pulse-star 2.5s ease-in-out infinite; }
+        @keyframes pulse-star { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.25); opacity: 0.7; } }
+        .logo-text { font-weight: 800; font-size: 22px; letter-spacing: 1.5px; background: linear-gradient(135deg, #ffffff 0%, #c8d6ff 50%, #a0b8f0 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-shadow: 0 0 40px rgba(100, 150, 255, 0.15); }
+        .header-right { display: flex; gap: 14px; align-items: center; }
+        .header-right svg { stroke: #a0b8e8; fill: none; stroke-width: 2; width: 22px; height: 22px; opacity: 0.6; transition: 0.3s; cursor: pointer; }
+        .header-right svg:hover { opacity: 1; stroke: #fff; }
+        .logo-result-badge { display: inline-block; background: rgba(255, 255, 255, 0.06); backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 30px; padding: 2px 16px; font-size: 10px; font-weight: 800; letter-spacing: 0.8px; text-transform: uppercase; color: #a0c0ff; transition: all 0.4s; text-shadow: 0 0 20px rgba(100, 180, 255, 0.1); }
+        /* ─── CONTENT ─── */
+        .content { padding: 16px 16px 24px; }
+        /* ─── TOP CARD ─── */
+        .top-card { background: linear-gradient(145deg, rgba(25, 35, 65, 0.8), rgba(12, 18, 38, 0.9)); border-radius: 22px; padding: 6px; display: flex; flex-wrap: wrap; margin-bottom: 18px; border: 1px solid rgba(255, 255, 255, 0.07); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05); backdrop-filter: blur(8px); }
+        .top-card-left { flex: 1; padding: 14px 14px 14px 16px; min-width: 140px; position: relative; }
+        .top-card-left::after { content: ''; position: absolute; right: 0; top: 18%; height: 64%; width: 1px; background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.12), transparent); }
+        .btn-how-to { display: inline-flex; align-items: center; gap: 6px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.08); color: #8aa8d8; border-radius: 30px; padding: 3px 16px 3px 12px; font-size: 10px; font-weight: 600; margin-bottom: 10px; cursor: default; letter-spacing: 0.3px; backdrop-filter: blur(4px); }
+        .btn-how-to svg { opacity: 0.5; }
+        .game-name { color: #6a8aba; font-size: 12px; letter-spacing: 1.5px; margin-bottom: 8px; font-weight: 400; text-transform: uppercase; }
+        .top-balls { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+        .top-ball { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 800; color: #fff; border: 2px solid rgba(255, 255, 255, 0.2); box-shadow: 0 0 24px rgba(255, 255, 255, 0.08); transition: 0.3s; }
+        .top-ball.purple { background: radial-gradient(circle at 30% 30%, #c89af0, #8b5fc0); border-color: rgba(180, 120, 230, 0.4); box-shadow: 0 0 30px rgba(160, 100, 220, 0.25); }
+        .top-ball.green { background: radial-gradient(circle at 30% 30%, #6ee88a, #2a9d4a); border-color: rgba(76, 217, 100, 0.4); box-shadow: 0 0 30px rgba(76, 217, 100, 0.2); }
+        .top-ball.red { background: radial-gradient(circle at 30% 30%, #ff6b60, #d94a4a); border-color: rgba(255, 59, 48, 0.4); box-shadow: 0 0 30px rgba(255, 59, 48, 0.2); }
+        .top-ball.yellow { background: radial-gradient(circle at 30% 30%, #ffde5a, #d4a820); border-color: rgba(245, 197, 66, 0.4); box-shadow: 0 0 30px rgba(245, 197, 66, 0.2); }
+        .top-bs-label { color: #a0bce8; font-size: 13px; margin-left: 6px; font-weight: 600; letter-spacing: 0.5px; text-shadow: 0 0 12px rgba(100, 160, 255, 0.15); }
+        .top-card-right { flex: 1; padding: 10px 16px 12px 18px; text-align: right; min-width: 120px; display: flex; flex-direction: column; justify-content: flex-end; }
+        .timer-label { color: #5a7aaa; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px; }
+        .timer-boxes { display: flex; justify-content: flex-end; gap: 4px; margin-bottom: 6px; }
+        .timer-box { background: rgba(0, 0, 0, 0.5); color: #e0eeff; font-weight: 800; font-size: 24px; width: 34px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.06); box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.02), 0 4px 12px rgba(0, 0, 0, 0.3); backdrop-filter: blur(4px); }
+        .timer-colon { color: #5a7aaa; font-weight: 700; font-size: 24px; display: flex; align-items: center; margin: 0 2px; }
+        .issue-number { color: #5a7aaa; font-size: 11px; letter-spacing: 0.8px; word-break: break-all; }
+        /* ─── PREDICTION BOX ─── */
+        .prediction-box { background: linear-gradient(145deg, rgba(20, 30, 60, 0.6), rgba(12, 18, 38, 0.8)); border-radius: 20px; margin-bottom: 18px; padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; border: 1px solid rgba(255, 255, 255, 0.06); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.04); backdrop-filter: blur(8px); }
+        .prediction-left { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .prediction-label { font-weight: 700; font-size: 13px; color: #a0c0e8; letter-spacing: 0.5px; }
+        .prediction-value { font-size: 26px; font-weight: 800; padding: 4px 24px; border-radius: 40px; color: #fff; transition: all 0.4s ease; text-shadow: 0 0 20px currentColor; letter-spacing: 1px; }
+        .prediction-value.big { background: linear-gradient(135deg, rgba(232, 148, 42, 0.4), rgba(212, 122, 26, 0.2)); border: 1px solid rgba(232, 148, 42, 0.3); color: #f5c842; box-shadow: 0 0 40px rgba(232, 148, 42, 0.15); }
+        .prediction-value.small { background: linear-gradient(135deg, rgba(60, 140, 220, 0.4), rgba(42, 106, 180, 0.2)); border: 1px solid rgba(60, 140, 220, 0.3); color: #6ab0ff; box-shadow: 0 0 40px rgba(60, 140, 220, 0.15); }
+        .prediction-value.waiting { background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.06); color: #5a7a9a; box-shadow: none; text-shadow: none; }
+        .prediction-result { font-size: 16px; font-weight: 800; margin-left: 10px; text-transform: uppercase; letter-spacing: 1px; }
+        .prediction-correct { color: #4cd964; text-shadow: 0 0 20px rgba(76, 217, 100, 0.6); }
+        .prediction-wrong { color: #ff5a50; text-shadow: 0 0 20px rgba(255, 59, 48, 0.6); }
+        .status-badge { font-size: 9px; font-weight: 800; padding: 3px 12px; border-radius: 30px; text-transform: uppercase; letter-spacing: 0.8px; color: #fff; }
+        .status-badge.waiting { background: rgba(255, 255, 255, 0.05); color: #5a7a9a; border: 1px solid rgba(255, 255, 255, 0.06); }
+        .status-badge.predicting { background: rgba(60, 140, 220, 0.2); color: #6ab0ff; border: 1px solid rgba(60, 140, 220, 0.3); }
+        .status-badge.result { background: rgba(232, 148, 42, 0.2); color: #f5c842; border: 1px solid rgba(232, 148, 42, 0.3); }
+        .status-badge.verified { background: rgba(76, 217, 100, 0.2); color: #4cd964; border: 1px solid rgba(76, 217, 100, 0.3); }
+        .logic-badge { background: rgba(255, 255, 255, 0.06); color: #c8daf5; border-radius: 30px; padding: 3px 14px; font-size: 10px; font-weight: 700; border: 1px solid rgba(255, 255, 255, 0.08); letter-spacing: 0.5px; }
+        /* ─── FILTERS ─── */
+        .filters { display: flex; gap: 8px; margin-bottom: 14px; }
+        .filter-btn { flex: 1; padding: 11px 0; text-align: center; border-radius: 30px; color: #8aa8d8; font-weight: 700; font-size: 13px; cursor: pointer; opacity: 0.4; transition: all 0.3s ease; border: 1px solid transparent; letter-spacing: 0.5px; }
+        .filter-btn.active { opacity: 1; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); }
+        .filter-btn.green { background: rgba(76, 217, 100, 0.15); border-color: rgba(76, 217, 100, 0.3); color: #4cd964; }
+        .filter-btn.violet { background: rgba(180, 120, 230, 0.15); border-color: rgba(180, 120, 230, 0.3); color: #c89af0; }
+        .filter-btn.red { background: rgba(255, 59, 48, 0.15); border-color: rgba(255, 59, 48, 0.3); color: #ff5a50; }
+        /* ─── NUMBER PAD ─── */
+        .number-pad { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 16px; }
+        .num-btn { aspect-ratio: 1/1; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 800; font-size: 24px; border: 2px solid rgba(255, 255, 255, 0.15); cursor: pointer; transition: all 0.2s ease; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4); }
+        .num-btn:active { transform: scale(0.88); }
+        .num-btn.green { background: radial-gradient(circle at 30% 30%, #6ee88a, #2a9d4a); border-color: rgba(76, 217, 100, 0.4); }
+        .num-btn.red { background: radial-gradient(circle at 30% 30%, #ff6b60, #d94a4a); border-color: rgba(255, 59, 48, 0.4); }
+        .num-btn.purple { background: radial-gradient(circle at 30% 30%, #c89af0, #8b5fc0); border-color: rgba(180, 120, 230, 0.4); }
+        /* ─── CONTROLS ─── */
+        .controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 14px; }
+        .btn-random { border: 1px solid rgba(255, 255, 255, 0.12); color: #c8daf5; background: rgba(255, 255, 255, 0.03); border-radius: 30px; padding: 9px 18px; font-size: 12px; flex-shrink: 0; cursor: pointer; font-weight: 700; letter-spacing: 0.5px; transition: all 0.3s; }
+        .btn-random:hover { background: rgba(255, 255, 255, 0.08); color: #fff; }
+        .multipliers { display: flex; gap: 4px; flex: 1; }
+        .multi-btn { border: 1px solid rgba(255, 255, 255, 0.04); background: rgba(255, 255, 255, 0.02); color: #5a7a9a; border-radius: 30px; padding: 9px 0; font-size: 11px; flex: 1; text-align: center; cursor: pointer; font-weight: 700; transition: all 0.3s ease; }
+        .multi-btn.active { background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.15); color: #fff; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3); }
+        /* ─── BIG / SMALL ─── */
+        .big-small-row { display: flex; border-radius: 40px; overflow: hidden; margin-bottom: 18px; border: 1px solid rgba(255, 255, 255, 0.04); background: rgba(255, 255, 255, 0.02); }
+        .bs-btn { flex: 1; padding: 13px 0; text-align: center; color: #fff; font-weight: 700; font-size: 15px; cursor: pointer; transition: all 0.3s ease; letter-spacing: 0.5px; opacity: 0.4; }
+        .bs-btn.big { background: transparent; }
+        .bs-btn.small { background: transparent; }
+        .bs-btn.active { opacity: 1; transform: scale(1.02); }
+        .bs-btn.big.active { background: linear-gradient(135deg, rgba(232, 148, 42, 0.3), rgba(212, 122, 26, 0.15)); box-shadow: inset 0 0 40px rgba(232, 148, 42, 0.05); border: 1px solid rgba(232, 148, 42, 0.15); }
+        .bs-btn.small.active { background: linear-gradient(135deg, rgba(60, 140, 220, 0.3), rgba(42, 106, 180, 0.15)); box-shadow: inset 0 0 40px rgba(60, 140, 220, 0.05); border: 1px solid rgba(60, 140, 220, 0.15); }
+        /* ─── TABS ─── */
+        .tabs { display: flex; gap: 6px; margin-bottom: 14px; }
+        .tab-btn { flex: 1; padding: 11px 0; border-radius: 40px; text-align: center; font-size: 12px; font-weight: 700; background: rgba(255, 255, 255, 0.02); color: #5a7a9a; cursor: pointer; transition: all 0.3s ease; border: 1px solid transparent; letter-spacing: 0.5px; }
+        .tab-btn.active { background: rgba(255, 255, 255, 0.06); color: #fff; border-color: rgba(255, 255, 255, 0.06); box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2); }
+        .tab-btn:hover { color: #b0cce8; }
+        /* ─── TABLE WRAPPER ─── */
+        .history-table-wrapper { border-radius: 16px; overflow: hidden; background: rgba(0, 0, 0, 0.25); border: 1px solid rgba(255, 255, 255, 0.03); backdrop-filter: blur(4px); }
+        .history-table { width: 100%; border-collapse: collapse; }
+        .history-table thead tr { background: rgba(20, 30, 60, 0.5); }
+        .history-table th { padding: 12px 6px; font-size: 11px; font-weight: 700; text-align: center; letter-spacing: 0.8px; text-transform: uppercase; color: #5a7a9a; border-bottom: 1px solid rgba(255, 255, 255, 0.03); }
+        .history-table tbody td { padding: 14px 6px; text-align: center; border-bottom: 1px solid rgba(255, 255, 255, 0.02); font-size: 14px; color: #b0cce8; }
+        .history-table tbody tr:last-child td { border-bottom: none; }
+        .history-table tbody tr:hover { background: rgba(255, 255, 255, 0.02); }
+        .td-number { font-size: 26px; font-weight: 800; }
+        .td-number.violet { color: #c89af0; text-shadow: 0 0 30px rgba(180, 120, 230, 0.15); }
+        .td-number.green { color: #4cd964; text-shadow: 0 0 30px rgba(76, 217, 100, 0.15); }
+        .td-number.red { color: #ff5a50; text-shadow: 0 0 30px rgba(255, 59, 48, 0.15); }
+        .td-number.yellow { color: #f5d84a; text-shadow: 0 0 30px rgba(245, 197, 66, 0.15); }
+        .td-bs { color: #5a7a9a; font-size: 11px; font-weight: 600; letter-spacing: 0.3px; }
+        .td-color { display: flex; justify-content: center; align-items: center; gap: 6px; }
+        .color-dot { width: 14px; height: 14px; border-radius: 50%; display: inline-block; border: 1px solid rgba(255, 255, 255, 0.04); }
+        .color-dot.red { background: radial-gradient(circle at 35% 35%, #ff6b60, #d94a4a); }
+        .color-dot.violet { background: radial-gradient(circle at 35% 35%, #c89af0, #8b5fc0); }
+        .color-dot.green { background: radial-gradient(circle at 35% 35%, #6ee88a, #2a9d4a); }
+        .color-dot.yellow { background: radial-gradient(circle at 35% 35%, #ffde5a, #d4a820); }
+        /* ─── BYPASS ─── */
+        .bypass-container { background: rgba(0, 0, 0, 0.2); border-radius: 20px; padding: 18px; border: 1px solid rgba(255, 255, 255, 0.03); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2); backdrop-filter: blur(8px); margin-bottom: 14px; }
+        .bypass-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+        .bypass-title { font-weight: 800; font-size: 17px; letter-spacing: 1px; background: linear-gradient(135deg, #ffffff, #a0b8f0); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .bypass-badge { background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 30px; padding: 3px 16px; font-size: 9px; font-weight: 700; color: #6a9ac8; letter-spacing: 0.8px; text-transform: uppercase; }
+        .bypass-stats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+        .bypass-stat-card { background: rgba(255, 255, 255, 0.02); border-radius: 14px; padding: 12px 4px; text-align: center; border: 1px solid rgba(255, 255, 255, 0.03); backdrop-filter: blur(4px); }
+        .bypass-stat-card .label { font-size: 8px; text-transform: uppercase; color: #4a6a8a; letter-spacing: 0.8px; font-weight: 700; }
+        .bypass-stat-card .value { font-size: 22px; font-weight: 800; color: #b0cce8; margin-top: 2px; }
+        .bypass-stat-card .value.loss { color: #ff5a50; text-shadow: 0 0 30px rgba(255, 59, 48, 0.1); }
+        .bypass-stat-card .value.flip { color: #f5d84a; text-shadow: 0 0 30px rgba(245, 197, 66, 0.1); }
+        .bypass-stat-card .value.win { color: #4cd964; text-shadow: 0 0 30px rgba(76, 217, 100, 0.1); }
+        .bypass-flip-indicator { display: flex; align-items: center; justify-content: center; gap: 12px; background: rgba(0, 0, 0, 0.2); border-radius: 40px; padding: 12px 16px; border: 1px solid rgba(255, 255, 255, 0.03); }
+        .bypass-flip-indicator .flip-label { font-size: 11px; color: #4a6a8a; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; }
+        .bypass-flip-indicator .flip-value { font-size: 20px; font-weight: 800; padding: 2px 22px; border-radius: 30px; background: rgba(255, 255, 255, 0.03); color: #b0cce8; border: 1px solid rgba(255, 255, 255, 0.04); }
+        .bypass-flip-indicator .flip-value.active-big { background: linear-gradient(135deg, rgba(232, 148, 42, 0.3), rgba(212, 122, 26, 0.1)); border-color: rgba(232, 148, 42, 0.15); color: #f5c842; box-shadow: 0 0 30px rgba(232, 148, 42, 0.05); }
+        .bypass-flip-indicator .flip-value.active-small { background: linear-gradient(135deg, rgba(60, 140, 220, 0.3), rgba(42, 106, 180, 0.1)); border-color: rgba(60, 140, 220, 0.15); color: #6ab0ff; box-shadow: 0 0 30px rgba(60, 140, 220, 0.05); }
+        .bypass-flip-indicator .flip-color-dot { width: 24px; height: 24px; border-radius: 50%; border: 2px solid rgba(255, 255, 255, 0.04); transition: 0.4s; }
+        .bypass-flip-indicator .flip-color-dot.green { background: radial-gradient(circle at 35% 35%, #6ee88a, #2a9d4a); border-color: rgba(76, 217, 100, 0.2); box-shadow: 0 0 30px rgba(76, 217, 100, 0.15); }
+        .bypass-flip-indicator .flip-color-dot.red { background: radial-gradient(circle at 35% 35%, #ff6b60, #d94a4a); border-color: rgba(255, 59, 48, 0.2); box-shadow: 0 0 30px rgba(255, 59, 48, 0.15); }
+        .bypass-flip-indicator .flip-color-dot.yellow { background: radial-gradient(circle at 35% 35%, #ffde5a, #d4a820); border-color: rgba(245, 197, 66, 0.2); box-shadow: 0 0 30px rgba(245, 197, 66, 0.15); }
+        .bypass-flip-indicator .flip-color-dot.none { background: rgba(40, 55, 80, 0.5); border-color: rgba(255, 255, 255, 0.03); }
+        .bypass-flip-indicator .flip-color-label { font-size: 10px; color: #4a6a8a; font-weight: 500; letter-spacing: 0.3px; }
+        /* ─── VOICE SELECTOR ─── */
+        .voice-selector-wrap { background: rgba(255, 255, 255, 0.02); border-radius: 14px; padding: 12px 14px; border: 1px solid rgba(255, 255, 255, 0.03); margin-bottom: 14px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+        .voice-selector-wrap label { font-size: 11px; font-weight: 600; color: #5a7a9a; letter-spacing: 0.5px; text-transform: uppercase; display: flex; align-items: center; gap: 6px; }
+        .voice-selector-wrap label svg { width: 16px; height: 16px; stroke: #5a7a9a; fill: none; stroke-width: 2; }
+        .voice-selector-wrap select { flex: 1; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 30px; padding: 8px 16px; color: #c8daf5; font-size: 13px; font-weight: 600; outline: none; cursor: pointer; min-width: 120px; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235a7a9a' stroke-width='2' fill='none'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; }
+        .voice-selector-wrap select option { background: #141c3a; color: #c8daf5; }
+        .voice-toggle { background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 30px; padding: 6px 16px; color: #a0bce8; font-size: 11px; font-weight: 700; cursor: pointer; transition: 0.3s; letter-spacing: 0.5px; text-transform: uppercase; white-space: nowrap; }
+        .voice-toggle:hover { background: rgba(255, 255, 255, 0.08); color: #fff; }
+        .voice-toggle.active { background: rgba(76, 217, 100, 0.15); border-color: rgba(76, 217, 100, 0.2); color: #4cd964; }
+        .voice-toggle.muted { background: rgba(255, 59, 48, 0.1); border-color: rgba(255, 59, 48, 0.15); color: #ff5a50; }
+        /* ─── LOGIC CARDS (10 engines) ─── */
+        .logic-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+        .logic-card { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.03); border-radius: 16px; padding: 12px 12px; cursor: pointer; transition: all 0.3s ease; display: flex; flex-direction: column; gap: 6px; backdrop-filter: blur(4px); }
+        .logic-card:hover { border-color: rgba(255, 255, 255, 0.06); background: rgba(255, 255, 255, 0.03); }
+        .logic-card.active { border-color: rgba(255, 255, 255, 0.08); background: rgba(255, 255, 255, 0.04); box-shadow: 0 0 40px rgba(255, 255, 255, 0.01); }
+        .logic-card .logic-icon { font-size: 22px; opacity: 0.7; text-align: center; }
+        .logic-card .logic-info { flex: 1; }
+        .logic-card .logic-info h4 { font-size: 12px; color: #c8daf5; margin-bottom: 1px; font-weight: 700; text-align: center; }
+        .logic-card .logic-info p { font-size: 9px; color: #5a7a9a; margin-bottom: 3px; font-weight: 400; text-align: center; }
+        .logic-card .logic-stats { display: flex; justify-content: center; gap: 14px; font-size: 10px; }
+        .logic-card .logic-stats .stat { display: flex; flex-direction: column; align-items: center; }
+        .logic-card .logic-stats .stat .val { font-weight: 700; font-size: 12px; }
+        .logic-card .logic-stats .stat .val.win { color: #4cd964; }
+        .logic-card .logic-stats .stat .val.acc { color: #6ab0ff; }
+        .logic-card .logic-stats .stat .lbl { color: #4a6a8a; font-size: 7px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .logic-card .logic-check { width: 20px; height: 20px; border-radius: 50%; border: 2px solid rgba(255, 255, 255, 0.04); display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: 0.3s; font-size: 12px; color: transparent; align-self: center; margin-top: 2px; }
+        .logic-card.active .logic-check { background: rgba(255, 255, 255, 0.06); border-color: rgba(255, 255, 255, 0.08); color: #fff; }
+        .logic-card.active .logic-check::after { content: '✓'; font-weight: 800; }
+        .bypass-footer { text-align: center; font-size: 9px; color: #3a5a7a; border-top: 1px solid rgba(255, 255, 255, 0.02); padding-top: 14px; letter-spacing: 0.5px; }
+        .bypass-footer span { opacity: 0.6; }
+        /* ─── RESPONSIVE ─── */
+        @media (max-width: 430px) { .app-wrapper { max-width: 100%; border-radius: 0; } .top-card-left::after { top: 18%; height: 64%; } .timer-box { width: 30px; height: 36px; font-size: 20px; } .prediction-value { font-size: 22px; padding: 2px 20px; } .num-btn { font-size: 22px; } .top-ball { width: 30px; height: 30px; font-size: 14px; } .voice-selector-wrap { flex-direction: column; align-items: stretch; } .voice-selector-wrap select { min-width: unset; } .logic-grid { grid-template-columns: 1fr 1fr; gap: 8px; } .logic-card .logic-info h4 { font-size: 11px; } .logic-card .logic-stats .stat .val { font-size: 11px; } }
+        @media (max-width: 360px) { .top-card-left { padding: 10px 10px 10px 12px; } .top-card-right { padding: 8px 12px 10px 14px; } .timer-box { width: 26px; height: 32px; font-size: 18px; } .prediction-value { font-size: 18px; padding: 2px 16px; } .num-btn { font-size: 18px; } .bypass-stats { grid-template-columns: 1fr 1fr 1fr; gap: 4px; } .logic-grid { grid-template-columns: 1fr 1fr; gap: 6px; } }
+        /* ─── UTILITY ANIMATIONS ─── */
+        .tab-content {
+            transition: opacity 0.25s ease;
+        }
+    </style>se;}</style>
+<link rel="stylesheet" href="css/goku-ui.css"><link rel="stylesheet" href="css/goku-v2.css">
+</head>
+<body>
+
+    <div class="app-wrapper">
+
+        <!-- ─── HEADER ─── -->
+        <header class="header">
+            <div class="header-left">
+                <div class="logo-area">
+                    <span class="logo-star">✦</span>
+                    <span class="logo-text">GOKU ELITE</span>
+                    <span class="logo-result-badge" id="logoResultBadge">⚡ LIVE</span>
+                </div>
+            </div>
+            <div class="header-right">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 10c0-1.5 1-2.5 2.5-2.5s2.5 1 2.5 2.5"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+            </div>
+        </header>
+
+        <!-- ─── CONTENT ─── -->
+        <div class="content">
+
+            <!-- TOP CARD -->
+            <div class="top-card">
+                <div class="top-card-left">
+                    <div class="btn-how-to">
+                        <svg width="12" height="12" fill="#8aa8d8" viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6z"/></svg>
+                        MADE BY GOKU
+                    </div>
+                    <div class="game-name">WINGO 1 MLIT</div>
+                    <div class="top-balls" id="lastResultBalls"></div>
+                </div>
+                <div class="top-card-right">
+                    <div class="timer-label">Time remaining</div>
+                    <div class="timer-boxes" id="timerBoxes">
+                        <div class="timer-box">0</div>
+                        <div class="timer-box">0</div>
+                        <span class="timer-colon">:</span>
+                        <div class="timer-box">0</div>
+                        <div class="timer-box">0</div>
+                    </div>
+                    <div class="issue-number" id="upcomingIssue">Upcoming: --</div>
+                </div>
+            </div>
+
+            <!-- PREDICTION -->
+            <div class="prediction-box" id="predictionBox">
+                <div class="prediction-left">
+                    <span class="prediction-label">PERIOD <span id="predPeriod">---</span></span>
+                    <span class="logic-badge" id="logicBadge">GOKU BYPASS V1</span>
+                    <span class="status-badge waiting" id="statusBadge">Waiting</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+                    <span class="prediction-value waiting" id="predValue">--</span>
+                    <span class="prediction-result" id="predResult"></span>
+                </div>
+            </div>
+
+            <!-- FILTERS -->
+            <div class="filters">
+                <div class="filter-btn green active" data-filter="green">Green</div>
+                <div class="filter-btn violet" data-filter="violet">Violet</div>
+                <div class="filter-btn red" data-filter="red">Red</div>
+                <div class="filter-btn yellow" data-filter="yellow">Yellow</div>
+            </div>
+
+            <!-- NUMBER PAD -->
+            <div class="number-pad">
+                <div class="num-btn purple" data-num="0">0</div>
+                <div class="num-btn green" data-num="1">1</div>
+                <div class="num-btn red" data-num="2">2</div>
+                <div class="num-btn green" data-num="3">3</div>
+                <div class="num-btn red" data-num="4">4</div>
+                <div class="num-btn purple" data-num="5">5</div>
+                <div class="num-btn red" data-num="6">6</div>
+                <div class="num-btn green" data-num="7">7</div>
+                <div class="num-btn red" data-num="8">8</div>
+                <div class="num-btn green" data-num="9">9</div>
+            </div>
+
+            <!-- CONTROLS -->
+            <div class="controls">
+                <div class="btn-random" id="randomBtn">🎲 Random</div>
+                <div class="multipliers">
+                    <div class="multi-btn active" data-mult="1">X1</div>
+                    <div class="multi-btn" data-mult="5">X5</div>
+                    <div class="multi-btn" data-mult="10">X10</div>
+                    <div class="multi-btn" data-mult="20">X20</div>
+                    <div class="multi-btn" data-mult="50">X50</div>
+                    <div class="multi-btn" data-mult="100">X100</div>
+                </div>
+            </div>
+
+            <!-- BIG / SMALL -->
+            <div class="big-small-row">
+                <div class="bs-btn big active" data-bs="big">Big</div>
+                <div class="bs-btn small" data-bs="small">Small</div>
+            </div>
+
+            <!-- TABS -->
+            <div class="tabs">
+                <div class="tab-btn active" data-tab="history">History</div>
+                <div class="tab-btn" data-tab="predictions">Prediction</div>
+                <div class="tab-btn" data-tab="bypass">BYPASS</div>
+            </div>
+
+            <!-- TAB: HISTORY -->
+            <div id="tab-history" class="tab-content">
+                <div class="history-table-wrapper">
+                    <table class="history-table">
+                        <thead><tr><th>Period</th><th>Number</th><th>BS</th><th>Color</th></tr></thead>
+                        <tbody id="historyBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- TAB: PREDICTIONS -->
+            <div id="tab-predictions" class="tab-content" style="display:none;">
+                <div class="history-table-wrapper">
+                    <table class="history-table">
+                        <thead><tr><th>Period</th><th>Prediction</th><th>Actual</th><th>Status</th><th>Logic</th></tr></thead>
+                        <tbody id="predHistoryBody">
+                            <tr><td colspan="5" style="text-align:center;color:#4a6a8a;padding:20px;">No predictions yet</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- TAB: BYPASS (10 logic engines + VOICE) -->
+            <div id="tab-bypass" class="tab-content" style="display:none;">
+
+                <!-- ─── VOICE SELECTOR ─── -->
+                <div class="voice-selector-wrap">
+                    <label>
+                        <svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+                        SPEAKER
+                    </label>
+                    <select id="voiceSelect"></select>
+                    <button class="voice-toggle active" id="voiceToggleBtn">🔊 ON</button>
+                </div>
+
+                <div class="bypass-container">
+                    <div class="bypass-header">
+                        <span class="bypass-title">⚡ BYPASS ENGINE</span>
+                        <span class="bypass-badge" id="bypassModeBadge">● ACTIVE</span>
+                    </div>
+
+                    <div class="bypass-stats">
+                        <div class="bypass-stat-card">
+                            <div class="label">Loss Streak</div>
+                            <div class="value loss" id="bypassLossCount">0</div>
+                        </div>
+                        <div class="bypass-stat-card">
+                            <div class="label">Flip Status</div>
+                            <div class="value flip" id="bypassFlipStatus">--</div>
+                        </div>
+                        <div class="bypass-stat-card">
+                            <div class="label">Total Wins</div>
+                            <div class="value win" id="bypassTotalWins">0</div>
+                        </div>
+                    </div>
+
+                    <div class="bypass-flip-indicator">
+                        <span class="flip-label">NEXT FLIP</span>
+                        <span class="flip-value" id="bypassFlipValue">--</span>
+                        <span class="flip-color-dot none" id="bypassColorDot"></span>
+                        <span class="flip-color-label" id="bypassColorLabel">no overlay</span>
+                    </div>
+                </div>
+
+                <!-- 10 Logic Cards -->
+                <div class="logic-grid" id="logicGrid">
+                    <!-- V1 -->
+                    <div class="logic-card active" data-logic="1">
+                        <div class="logic-icon">🎯</div>
+                        <div class="logic-info">
+                            <h4>GOKU BYPASS V1</h4>
+                            <p>Streak &amp; alternation</p>
+                            <div class="logic-stats">
+                                <div class="stat"><span class="val win" id="logic1-wins">0</span><span class="lbl">Wins</span></div>
+                                <div class="stat"><span class="val acc" id="logic1-accuracy">0%</span><span class="lbl">Acc</span></div>
+                            </div>
+                        </div>
+                        <div class="logic-check"></div>
+                    </div>
+                    <!-- V2 -->
+                    <div class="logic-card" data-logic="2">
+                        <div class="logic-icon">🎯</div>
+                        <div class="logic-info">
+                            <h4>GOKU BYPASS V2</h4>
+                            <p>Hot / cold numbers</p>
+                            <div class="logic-stats">
+                                <div class="stat"><span class="val win" id="logic2-wins">0</span><span class="lbl">Wins</span></div>
+                                <div class="stat"><span class="val acc" id="logic2-accuracy">0%</span><span class="lbl">Acc</span></div>
+                            </div>
+                        </div>
+                        <div class="logic-check"></div>
+                    </div>
+                    <!-- V3 -->
+                    <div class="logic-card" data-logic="3">
+                        <div class="logic-icon">🎯</div>
+                        <div class="logic-info">
+                            <h4>GOKU BYPASS V3</h4>
+                            <p>Combined algorithms</p>
+                            <div class="logic-stats">
+                                <div class="stat"><span class="val win" id="logic3-wins">0</span><span class="lbl">Wins</span></div>
+                                <div class="stat"><span class="val acc" id="logic3-accuracy">0%</span><span class="lbl">Acc</span></div>
+                            </div>
+                        </div>
+                        <div class="logic-check"></div>
+                    </div>
+                    <!-- V4 -->
+                    <div class="logic-card" data-logic="4">
+                        <div class="logic-icon">📈</div>
+                        <div class="logic-info">
+                            <h4>GOKU BYPASS V4</h4>
+                            <p>Trend momentum</p>
+                            <div class="logic-stats">
+                                <div class="stat"><span class="val win" id="logic4-wins">0</span><span class="lbl">Wins</span></div>
+                                <div class="stat"><span class="val acc" id="logic4-accuracy">0%</span><span class="lbl">Acc</span></div>
+                            </div>
+                        </div>
+                        <div class="logic-check"></div>
+                    </div>
+                    <!-- V5 -->
+                    <div class="logic-card" data-logic="5">
+                        <div class="logic-icon">🧠</div>
+                        <div class="logic-info">
+                            <h4>GOKU BYPASS V5</h4>
+                            <p>Adaptive weighted</p>
+                            <div class="logic-stats">
+                                <div class="stat"><span class="val win" id="logic5-wins">0</span><span class="lbl">Wins</span></div>
+                                <div class="stat"><span class="val acc" id="logic5-accuracy">0%</span><span class="lbl">Acc</span></div>
+                            </div>
+                        </div>
+                        <div class="logic-check"></div>
+                    </div>
+                    <!-- V6 -->
+                    <div class="logic-card" data-logic="6">
+                        <div class="logic-icon">🔄</div>
+                        <div class="logic-info">
+                            <h4>GOKU BYPASS V6</h4>
+                            <p>Pattern recognition</p>
+                            <div class="logic-stats">
+                                <div class="stat"><span class="val win" id="logic6-wins">0</span><span class="lbl">Wins</span></div>
+                                <div class="stat"><span class="val acc" id="logic6-accuracy">0%</span><span class="lbl">Acc</span></div>
+                            </div>
+                        </div>
+                        <div class="logic-check"></div>
+                    </div>
+                    <!-- V7 -->
+                    <div class="logic-card" data-logic="7">
+                        <div class="logic-icon">🌀</div>
+                        <div class="logic-info">
+                            <h4>GOKU BYPASS V7</h4>
+                            <p>Fibonacci weighted</p>
+                            <div class="logic-stats">
+                                <div class="stat"><span class="val win" id="logic7-wins">0</span><span class="lbl">Wins</span></div>
+                                <div class="stat"><span class="val acc" id="logic7-accuracy">0%</span><span class="lbl">Acc</span></div>
+                            </div>
+                        </div>
+                        <div class="logic-check"></div>
+                    </div>
+                    <!-- V8 -->
+                    <div class="logic-card" data-logic="8">
+                        <div class="logic-icon">↕️</div>
+                        <div class="logic-info">
+                            <h4>GOKU BYPASS V8</h4>
+                            <p>Zigzag predictor</p>
+                            <div class="logic-stats">
+                                <div class="stat"><span class="val win" id="logic8-wins">0</span><span class="lbl">Wins</span></div>
+                                <div class="stat"><span class="val acc" id="logic8-accuracy">0%</span><span class="lbl">Acc</span></div>
+                            </div>
+                        </div>
+                        <div class="logic-check"></div>
+                    </div>
+                    <!-- V9 -->
+                    <div class="logic-card" data-logic="9">
+                        <div class="logic-icon">🗳️</div>
+                        <div class="logic-info">
+                            <h4>GOKU BYPASS V9</h4>
+                            <p>Majority vote</p>
+                            <div class="logic-stats">
+                                <div class="stat"><span class="val win" id="logic9-wins">0</span><span class="lbl">Wins</span></div>
+                                <div class="stat"><span class="val acc" id="logic9-accuracy">0%</span><span class="lbl">Acc</span></div>
+                            </div>
+                        </div>
+                        <div class="logic-check"></div>
+                    </div>
+                    <!-- V10 -->
+                    <div class="logic-card" data-logic="10">
+                        <div class="logic-icon">🌲</div>
+                        <div class="logic-info">
+                            <h4>GOKU BYPASS V10</h4>
+                            <p>Random forest</p>
+                            <div class="logic-stats">
+                                <div class="stat"><span class="val win" id="logic10-wins">0</span><span class="lbl">Wins</span></div>
+                                <div class="stat"><span class="val acc" id="logic10-accuracy">0%</span><span class="lbl">Acc</span></div>
+                            </div>
+                        </div>
+                        <div class="logic-check"></div>
+                    </div>
+                </div>
+
+                <div class="bypass-footer">
+                    <span>● Loss triggers flip + 25% random color overlay (Red / Green / Yellow)</span>
+                </div>
+            </div>
+
+        </div><!-- /content -->
+    </div><!-- /app-wrapper -->
+
+    <script>
+        (function() {
+            // ─── CONFIG ───
+            const API_URL = 'https://draw.ar-lottery01.com/WinGo/WinGo_1M/GetHistoryIssuePage.json?ts={}';
+            const API_HEADERS = {
+                "User-Agent": "Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Mobile Safari/537.36",
+                "Referer": "https://hgnice.biz"
+            };
+
+            let serverTimeOffset = 0;
+            let processedPeriods = new Set();
+            let historyLog = [];
+            let currentActivePeriod = null;
+            let currentActivePrediction = null;
+            let engineLifecycleStatus = "waiting";
+            let countdownInterval = null;
+
+            let totalPredictions = 0,
+                totalWins = 0,
+                totalLosses = 0;
+            let lossCounter = 0,
+                flipPending = false;
+            let overridePrediction = null;
+            let activeLogic = 1;
+            // stats for 10 engines
+            let logicStats = {};
+            for (let i = 1; i <= 10; i++) {
+                logicStats[i] = { wins: 0, losses: 0 };
+            }
+            let predictionHistory = [];
+            let lastFlipColor = null;
+            let isResultShowing = false;
+
+            // ─── VOICE ───
+            let voiceEnabled = true;
+            let selectedVoiceURI = null;
+            let availableVoices = [];
+
+            // ─── DOM REFS ───
+            const lastResultBalls = document.getElementById('lastResultBalls');
+            const timerBoxes = document.querySelectorAll('#timerBoxes .timer-box');
+            const upcomingIssueEl = document.getElementById('upcomingIssue');
+            const historyBody = document.getElementById('historyBody');
+            const predPeriodEl = document.getElementById('predPeriod');
+            const predValueEl = document.getElementById('predValue');
+            const predResultEl = document.getElementById('predResult');
+            const logoResultBadge = document.getElementById('logoResultBadge');
+            const predHistoryBody = document.getElementById('predHistoryBody');
+            const logicBadge = document.getElementById('logicBadge');
+            const statusBadge = document.getElementById('statusBadge');
+
+            const bypassLossCount = document.getElementById('bypassLossCount');
+            const bypassFlipStatus = document.getElementById('bypassFlipStatus');
+            const bypassTotalWins = document.getElementById('bypassTotalWins');
+            const bypassFlipValue = document.getElementById('bypassFlipValue');
+            const bypassColorDot = document.getElementById('bypassColorDot');
+            const bypassColorLabel = document.getElementById('bypassColorLabel');
+            const bypassModeBadge = document.getElementById('bypassModeBadge');
+
+            const voiceSelect = document.getElementById('voiceSelect');
+            const voiceToggleBtn = document.getElementById('voiceToggleBtn');
+
+            // ─── SPEECH ───
+            function speak(text, callback) {
+                if (!voiceEnabled) {
+                    if (callback) callback();
+                    return;
+                }
+                if (!window.speechSynthesis) {
+                    if (callback) callback();
+                    return;
+                }
+                window.speechSynthesis.cancel();
+
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.rate = 1.0;
+                utterance.pitch = 1.0;
+                utterance.volume = 1.0;
+
+                if (selectedVoiceURI) {
+                    const voice = availableVoices.find(v => v.voiceURI === selectedVoiceURI);
+                    if (voice) utterance.voice = voice;
+                } else {
+                    const defaultVoice = availableVoices.find(v =>
+                        v.lang.startsWith('en') && v.name.toLowerCase().includes('female')
+                    ) || availableVoices.find(v => v.lang.startsWith('en')) || availableVoices[0];
+                    if (defaultVoice) utterance.voice = defaultVoice;
+                }
+
+                if (callback) {
+                    utterance.onend = callback;
+                }
+                window.speechSynthesis.speak(utterance);
+            }
+
+            function speakWin() {
+                const messages = [
+                    'Congratulations! Win!',
+                    'Victory! You win!',
+                    'Excellent! Win!',
+                    'Great job! Win!',
+                    'You nailed it! Win!'
+                ];
+                const msg = messages[Math.floor(Math.random() * messages.length)];
+                speak(msg);
+            }
+
+            function speakLoss() {
+                const messages = [
+                    'Loss! Flip activated.',
+                    'Sorry, loss. Flipping now.',
+                    'Loss! Bypass engaged.',
+                    'Unlucky, loss. Flip incoming.',
+                    'Loss! Strategy adjusting.'
+                ];
+                const msg = messages[Math.floor(Math.random() * messages.length)];
+                speak(msg);
+            }
+
+            function speakLogicSwitch(engineName) {
+                speak(`Switched to ${engineName}`);
+            }
+
+            // ─── POPULATE VOICES ───
+            function populateVoices() {
+                if (!window.speechSynthesis) return;
+                const voices = window.speechSynthesis.getVoices();
+                if (voices.length === 0) {
+                    setTimeout(populateVoices, 500);
+                    return;
+                }
+                availableVoices = voices;
+                const currentVal = voiceSelect.value;
+                voiceSelect.innerHTML = '';
+                const grouped = {};
+                voices.forEach(v => {
+                    const lang = v.lang || 'unknown';
+                    if (!grouped[lang]) grouped[lang] = [];
+                    grouped[lang].push(v);
+                });
+                for (const [lang, list] of Object.entries(grouped)) {
+                    const optgroup = document.createElement('optgroup');
+                    optgroup.label = lang;
+                    list.forEach(v => {
+                        const opt = document.createElement('option');
+                        opt.value = v.voiceURI;
+                        opt.textContent = v.name + (v.default ? ' ★' : '');
+                        if (v.voiceURI === currentVal) opt.selected = true;
+                        optgroup.appendChild(opt);
+                    });
+                    voiceSelect.appendChild(optgroup);
+                }
+                if (currentVal && voiceSelect.querySelector(`option[value="${currentVal}"]`)) {
+                    voiceSelect.value = currentVal;
+                    selectedVoiceURI = currentVal;
+                } else {
+                    const enOpt = voiceSelect.querySelector('option[lang="en-US"], option[lang="en-GB"], option[lang^="en"]');
+                    if (enOpt) {
+                        voiceSelect.value = enOpt.value;
+                        selectedVoiceURI = enOpt.value;
+                    } else if (voiceSelect.options.length > 0) {
+                        voiceSelect.value = voiceSelect.options[0].value;
+                        selectedVoiceURI = voiceSelect.options[0].value;
+                    }
+                }
+            }
+
+            // ─── HELPERS ───
+            function getColorClass(num) {
+                if (num === 0 || num === 5) return 'violet';
+                if (num === 2 || num === 4 || num === 6 || num === 8) return 'red';
+                if (num === 1 || num === 3 || num === 7 || num === 9) return 'green';
+                return 'yellow';
+            }
+
+            function getBigSmall(num) {
+                try { return parseInt(num, 10) >= 5 ? 'Big' : 'Small'; } catch (_) { return 'Unknown'; }
+            }
+
+            function setStatus(status) {
+                engineLifecycleStatus = status;
+                statusBadge.className = `status-badge ${status}`;
+                statusBadge.textContent = status.charAt(0).toUpperCase() + status.slice(1);
+            }
+
+            function computeNextIssue(lastIssue) {
+                if (!lastIssue || lastIssue.length < 8) return '------';
+                try {
+                    const prefix = lastIssue.substring(0, lastIssue.length - 4);
+                    const suffix = lastIssue.substring(lastIssue.length - 4);
+                    const nextNum = parseInt(suffix, 10) + 1;
+                    return prefix + String(nextNum).padStart(suffix.length, '0');
+                } catch (_) { return '------'; }
+            }
+
+            function getRandomColorFlip() {
+                const colors = ['red', 'green', 'yellow'];
+                return Math.random() < 0.25 ? colors[Math.floor(Math.random() * colors.length)] : null;
+            }
+
+            // ─── 10 LOGIC ENGINES ───
+            const LOGIC_ENGINES = {
+                1: {
+                    id: 1,
+                    name: 'GOKU BYPASS V1',
+                    predict: function(history) {
+                        if (!history || history.length < 3) return this.fallback();
+                        const recent = history.slice(0, 15);
+                        let streak = 0,
+                            alternations = 0,
+                            lastSize = null;
+                        for (let i = 0; i < Math.min(recent.length, 15); i++) {
+                            const num = recent[i].num;
+                            const size = num >= 5 ? 'Big' : 'Small';
+                            if (i > 0) {
+                                const prevSize = recent[i - 1].num >= 5 ? 'Big' : 'Small';
+                                if (size === prevSize) streak++;
+                                else alternations++;
+                            }
+                            lastSize = size;
+                        }
+                        return (streak >= 3 || alternations > 5) ? (lastSize === 'Big' ? 'Small' : 'Big') : (Math
+                            .random() > 0.5 ? 'Big' : 'Small');
+                    },
+                    fallback: function() { return Math.random() > 0.5 ? 'Big' : 'Small'; }
+                },
+                2: {
+                    id: 2,
+                    name: 'GOKU BYPASS V2',
+                    predict: function(history) {
+                        if (!history || history.length < 5) return this.fallback();
+                        const recent = history.slice(0, 20);
+                        let smallCount = 0;
+                        recent.forEach(item => { if (item.num < 5) smallCount++; });
+                        const smallRatio = smallCount / recent.length;
+                        if (smallRatio < 0.45) return 'Small';
+                        if (smallRatio > 0.55) return 'Big';
+                        return Math.random() > 0.5 ? 'Big' : 'Small';
+                    },
+                    fallback: function() { return Math.random() > 0.5 ? 'Big' : 'Small'; }
+                },
+                3: {
+                    id: 3,
+                    name: 'GOKU BYPASS V3',
+                    predict: function(history) {
+                        if (!history || history.length < 5) return this.fallback();
+                        const p1 = LOGIC_ENGINES[1].predict(history);
+                        const p2 = LOGIC_ENGINES[2].predict(history);
+                        return p1 === p2 ? p1 : (Math.random() > 0.5 ? 'Big' : 'Small');
+                    },
+                    fallback: function() { return Math.random() > 0.5 ? 'Big' : 'Small'; }
+                },
+                4: {
+                    id: 4,
+                    name: 'GOKU BYPASS V4',
+                    predict: function(history) {
+                        if (!history || history.length < 5) return this.fallback();
+                        const recent = history.slice(0, 10);
+                        let bigCount = 0;
+                        recent.forEach(item => { if (item.num >= 5) bigCount++; });
+                        const ratio = bigCount / recent.length;
+                        if (ratio > 0.6) return 'Big';
+                        if (ratio < 0.4) return 'Small';
+                        return Math.random() > 0.5 ? 'Big' : 'Small';
+                    },
+                    fallback: function() { return Math.random() > 0.5 ? 'Big' : 'Small'; }
+                },
+                5: {
+                    id: 5,
+                    name: 'GOKU BYPASS V5',
+                    predict: function(history) {
+                        if (!history || history.length < 3) return this.fallback();
+                        const weights = [0.4, 0.3, 0.2, 0.1];
+                        let weightedSum = 0,
+                            totalWeight = 0;
+                        for (let i = 0; i < Math.min(history.length, weights.length); i++) {
+                            const num = history[i].num;
+                            const size = (num >= 5) ? 1 : 0;
+                            weightedSum += size * weights[i];
+                            totalWeight += weights[i];
+                        }
+                        const avg = weightedSum / totalWeight;
+                        if (avg > 0.6) return 'Big';
+                        if (avg < 0.4) return 'Small';
+                        return Math.random() > 0.5 ? 'Big' : 'Small';
+                    },
+                    fallback: function() { return Math.random() > 0.5 ? 'Big' : 'Small'; }
+                },
+                6: {
+                    id: 6,
+                    name: 'GOKU BYPASS V6',
+                    predict: function(history) {
+                        // Pattern recognition: detect consecutive Big/Small runs
+                        if (!history || history.length < 4) return this.fallback();
+                        const recent = history.slice(0, 10);
+                        let bigRun = 0,
+                            smallRun = 0,
+                            last = null;
+                        for (let i = 0; i < recent.length; i++) {
+                            const size = recent[i].num >= 5 ? 'Big' : 'Small';
+                            if (i === 0) { last = size; continue; }
+                            if (size === last) {
+                                if (size === 'Big') bigRun++;
+                                else smallRun++;
+                            } else {
+                                break;
+                            }
+                            last = size;
+                        }
+                        if (bigRun >= 2) return 'Small';
+                        if (smallRun >= 2) return 'Big';
+                        return Math.random() > 0.5 ? 'Big' : 'Small';
+                    },
+                    fallback: function() { return Math.random() > 0.5 ? 'Big' : 'Small'; }
+                },
+                7: {
+                    id: 7,
+                    name: 'GOKU BYPASS V7',
+                    predict: function(history) {
+                        // Fibonacci weighted: [1,1,2,3,5,8] weights
+                        if (!history || history.length < 2) return this.fallback();
+                        const fib = [1, 1, 2, 3, 5, 8];
+                        let weightedSum = 0,
+                            totalWeight = 0;
+                        const len = Math.min(history.length, fib.length);
+                        for (let i = 0; i < len; i++) {
+                            const num = history[i].num;
+                            const size = (num >= 5) ? 1 : 0;
+                            weightedSum += size * fib[i];
+                            totalWeight += fib[i];
+                        }
+                        const avg = weightedSum / totalWeight;
+                        if (avg > 0.55) return 'Big';
+                        if (avg < 0.45) return 'Small';
+                        return Math.random() > 0.5 ? 'Big' : 'Small';
+                    },
+                    fallback: function() { return Math.random() > 0.5 ? 'Big' : 'Small'; }
+                },
+                8: {
+                    id: 8,
+                    name: 'GOKU BYPASS V8',
+                    predict: function(history) {
+                        // Zigzag: if last two alternate, continue alternation; else random
+                        if (!history || history.length < 2) return this.fallback();
+                        const last = history[0].num >= 5 ? 'Big' : 'Small';
+                        const prev = history[1].num >= 5 ? 'Big' : 'Small';
+                        if (last !== prev) {
+                            // Alternating, predict opposite of last
+                            return last === 'Big' ? 'Small' : 'Big';
+                        } else {
+                            // Same, predict opposite with 70% chance to break streak
+                            const breakStreak = Math.random() < 0.7;
+                            if (breakStreak) {
+                                return last === 'Big' ? 'Small' : 'Big';
+                            } else {
+                                return last;
+                            }
+                        }
+                    },
+                    fallback: function() { return Math.random() > 0.5 ? 'Big' : 'Small'; }
+                },
+                9: {
+                    id: 9,
+                    name: 'GOKU BYPASS V9',
+                    predict: function(history) {
+                        // Majority vote of V1-V5
+                        if (!history || history.length < 3) return this.fallback();
+                        const votes = {};
+                        for (let i = 1; i <= 5; i++) {
+                            const pred = LOGIC_ENGINES[i].predict(history);
+                            votes[pred] = (votes[pred] || 0) + 1;
+                        }
+                        if (votes.Big > votes.Small) return 'Big';
+                        if (votes.Small > votes.Big) return 'Small';
+                        return Math.random() > 0.5 ? 'Big' : 'Small';
+                    },
+                    fallback: function() { return Math.random() > 0.5 ? 'Big' : 'Small'; }
+                },
+                10: {
+                    id: 10,
+                    name: 'GOKU BYPASS V10',
+                    predict: function(history) {
+                        // Random forest: pick random subset of V1-V5 and vote
+                        if (!history || history.length < 3) return this.fallback();
+                        const indices = [1, 2, 3, 4, 5];
+                        // shuffle and take first 3
+                        for (let i = indices.length - 1; i > 0; i--) {
+                            const j = Math.floor(Math.random() * (i + 1));
+                            [indices[i], indices[j]] = [indices[j], indices[i]];
+                        }
+                        const selected = indices.slice(0, 3);
+                        const votes = {};
+                        selected.forEach(id => {
+                            const pred = LOGIC_ENGINES[id].predict(history);
+                            votes[pred] = (votes[pred] || 0) + 1;
+                        });
+                        if (votes.Big > votes.Small) return 'Big';
+                        if (votes.Small > votes.Big) return 'Small';
+                        return Math.random() > 0.5 ? 'Big' : 'Small';
+                    },
+                    fallback: function() { return Math.random() > 0.5 ? 'Big' : 'Small'; }
+                }
+            };
+
+            // ─── FETCH ───
+            async function fetchData() {
+                try {
+                    const ts = Date.now();
+                    const url = API_URL.replace('{}', ts);
+                    const response = await fetch(url, { headers: API_HEADERS });
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                    const result = await response.json();
+
+                    let list = [];
+                    if (result && result.data && Array.isArray(result.data.list)) {
+                        list = result.data.list;
+                    } else if (result && Array.isArray(result.list)) {
+                        list = result.list;
+                    } else {
+                        throw new Error("No list found");
+                    }
+
+                    return list.map(item => ({
+                        issueNumber: String(item.issueNumber || item.issue || item.Period || ''),
+                        number: parseInt(item.number || item.num || item.Number || 0, 10)
+                    })).filter(item => item.issueNumber && !isNaN(item.number));
+                } catch (_) {
+                    const base = Math.floor(Date.now() / 60000);
+                    const fallback = [];
+                    for (let i = 0; i < 15; i++) {
+                        const num = (base + i * 7) % 10;
+                        fallback.push({ issueNumber: String(2026071910000 + (base - i)), number: num });
+                    }
+                    return fallback;
+                }
+            }
+
+            // ─── UPDATE BYPASS UI ───
+            function updateBypassUI() {
+                bypassLossCount.textContent = lossCounter;
+                bypassTotalWins.textContent = totalWins;
+
+                if (flipPending) {
+                    bypassFlipStatus.textContent = 'FLIP';
+                    bypassFlipStatus.style.color = '#f5d84a';
+                } else {
+                    bypassFlipStatus.textContent = 'NORMAL';
+                    bypassFlipStatus.style.color = '#4cd964';
+                }
+
+                if (currentActivePrediction) {
+                    bypassFlipValue.textContent = currentActivePrediction;
+                    bypassFlipValue.className = 'flip-value ' + (currentActivePrediction.toLowerCase() === 'big' ?
+                        'active-big' : 'active-small');
+                } else {
+                    bypassFlipValue.textContent = '--';
+                    bypassFlipValue.className = 'flip-value';
+                }
+
+                const color = overridePrediction?.color || lastFlipColor || null;
+                if (color === 'green') {
+                    bypassColorDot.className = 'flip-color-dot green';
+                    bypassColorLabel.textContent = '🍀 green';
+                } else if (color === 'red') {
+                    bypassColorDot.className = 'flip-color-dot red';
+                    bypassColorLabel.textContent = '🔴 red';
+                } else if (color === 'yellow') {
+                    bypassColorDot.className = 'flip-color-dot yellow';
+                    bypassColorLabel.textContent = '⭐ yellow';
+                } else {
+                    bypassColorDot.className = 'flip-color-dot none';
+                    bypassColorLabel.textContent = 'no overlay';
+                }
+
+                bypassModeBadge.textContent = flipPending ? '⚡ FLIP ACTIVE' : '● ACTIVE';
+            }
+
+            // ─── SYNC ───
+            async function runSync() {
+                const rawData = await fetchData();
+                if (!rawData || rawData.length === 0) return;
+
+                rawData.sort((a, b) => b.issueNumber.localeCompare(a.issueNumber));
+                historyLog = rawData.map(item => ({ issue: item.issueNumber, num: item.number }));
+                const latest = historyLog[0];
+                if (!latest) return;
+
+                const finishedPeriod = latest.issue;
+                const finishedNum = latest.num;
+                const finishedSize = getBigSmall(finishedNum);
+
+                if (processedPeriods.has(finishedPeriod)) {
+                    updateUI(latest);
+                    updateBypassUI();
+                    return;
+                }
+
+                if (currentActivePeriod && finishedPeriod === currentActivePeriod) {
+                    processedPeriods.add(finishedPeriod);
+                    setStatus("result");
+
+                    const isWin = (currentActivePrediction === finishedSize);
+                    totalPredictions++;
+
+                    if (isWin) {
+                        totalWins++;
+                        logicStats[activeLogic].wins++;
+                        lossCounter = 0;
+                        flipPending = false;
+                        overridePrediction = null;
+                        lastFlipColor = null;
+                        speakWin();
+                    } else {
+                        totalLosses++;
+                        logicStats[activeLogic].losses++;
+                        lossCounter++;
+                        flipPending = true;
+                        const cf = getRandomColorFlip();
+                        if (cf) {
+                            overridePrediction = { size: null, color: cf };
+                            lastFlipColor = cf;
+                        } else {
+                            overridePrediction = null;
+                            lastFlipColor = null;
+                        }
+                        speakLoss();
+                    }
+
+                    let tracked = predictionHistory.find(p => p.period === finishedPeriod);
+                    if (tracked) {
+                        tracked.actual = finishedNum + ` (${finishedSize})`;
+                        tracked.status = isWin ? 'Win' : 'Loss';
+                    }
+
+                    predResultEl.innerHTML = isWin ?
+                        '<span class="result-badge win">WIN</span>' :
+                        '<span class="result-badge loss">LOSS</span>';
+
+                    logoResultBadge.textContent = isWin ? 'WIN' : 'LOSS';
+                    logoResultBadge.style.background = isWin ? 'rgba(76,217,100,0.2)' : 'rgba(255,59,48,0.2)';
+                    logoResultBadge.style.borderColor = isWin ? 'rgba(76,217,100,0.2)' : 'rgba(255,59,48,0.2)';
+                    logoResultBadge.style.color = isWin ? '#4cd964' : '#ff3b30';
+                    setStatus("verified");
+                    isResultShowing = true;
+
+                    // next prediction
+                    currentActivePeriod = computeNextIssue(finishedPeriod);
+                    const histNums = historyLog.map(item => ({ num: item.num }));
+                    let rawPred = LOGIC_ENGINES[activeLogic].predict(histNums);
+
+                    if (flipPending) {
+                        const flipped = rawPred === 'Big' ? 'Small' : 'Big';
+                        const cf = getRandomColorFlip();
+                        if (cf) {
+                            overridePrediction = { size: flipped, color: cf };
+                            lastFlipColor = cf;
+                        } else {
+                            overridePrediction = { size: flipped, color: null };
+                            lastFlipColor = null;
+                        }
+                        currentActivePrediction = flipped;
+                        flipPending = false;
+                    } else {
+                        currentActivePrediction = rawPred;
+                        overridePrediction = null;
+                        lastFlipColor = null;
+                    }
+
+                    predictionHistory.unshift({
+                        period: currentActivePeriod,
+                        prediction: currentActivePrediction,
+                        actual: undefined,
+                        status: 'Pending',
+                        logicId: activeLogic
+                    });
+
+                    updateUI(latest);
+                    updateBypassUI();
+
+                    setTimeout(() => {
+                        if (engineLifecycleStatus === "verified") {
+                            predResultEl.innerHTML = '';
+                            logoResultBadge.textContent = '⚡ LIVE';
+                            logoResultBadge.style.background = 'rgba(255,255,255,0.06)';
+                            logoResultBadge.style.borderColor = 'rgba(255,255,255,0.06)';
+                            logoResultBadge.style.color = '#a0c0ff';
+                            setStatus("predicting");
+                            isResultShowing = false;
+                            updateUI(latest);
+                            updateBypassUI();
+                        }
+                    }, 5000);
+
+                    return;
+                }
+
+                if (!currentActivePeriod || finishedPeriod !== currentActivePeriod) {
+                    if (!currentActivePeriod || finishedPeriod > currentActivePeriod) {
+                        currentActivePeriod = computeNextIssue(finishedPeriod);
+                        const histNums = historyLog.map(item => ({ num: item.num }));
+                        let rawPred = LOGIC_ENGINES[activeLogic].predict(histNums);
+                        currentActivePrediction = rawPred;
+                        setStatus("predicting");
+                        predictionHistory.unshift({
+                            period: currentActivePeriod,
+                            prediction: currentActivePrediction,
+                            actual: undefined,
+                            status: 'Pending',
+                            logicId: activeLogic
+                        });
+                        processedPeriods.add(finishedPeriod);
+                    }
+                }
+
+                updateUI(latest);
+                updateBypassUI();
+            }
+
+            // ─── UPDATE UI ───
+            function updateUI(latest) {
+                upcomingIssueEl.textContent = `Upcoming: ${currentActivePeriod || '--'}`;
+
+                if (latest) {
+                    const cl = getColorClass(latest.num);
+                    const bs = getBigSmall(latest.num);
+                    lastResultBalls.innerHTML =
+                        `<div class="top-ball ${cl}">${latest.num}</div><span class="top-bs-label">${bs}</span>`;
+                }
+
+                predPeriodEl.textContent = currentActivePeriod ? currentActivePeriod.slice(-6) : "---";
+                logicBadge.textContent = LOGIC_ENGINES[activeLogic].name;
+
+                if (engineLifecycleStatus === "waiting") {
+                    predValueEl.textContent = "--";
+                    predValueEl.className = "prediction-value waiting";
+                } else {
+                    predValueEl.textContent = currentActivePrediction || '--';
+                    predValueEl.className = `prediction-value ${(currentActivePrediction || '').toLowerCase()}`;
+                }
+
+                historyBody.innerHTML = '';
+                historyLog.slice(0, 10).forEach(item => {
+                    const color = getColorClass(item.num);
+                    const tr = document.createElement('tr');
+                    tr.innerHTML =
+                        `<td>${item.issue}</td><td class="td-number ${color}">${item.num}</td><td class="td-bs">${getBigSmall(item.num)}</td><td class="td-color"><span class="color-dot ${color}"></span></td>`;
+                    historyBody.appendChild(tr);
+                });
+
+                predHistoryBody.innerHTML = '';
+                if (predictionHistory.length === 0) {
+                    predHistoryBody.innerHTML =
+                        '<tr><td colspan="5" style="text-align:center;color:#4a6a8a;padding:20px;">No predictions yet</td></tr>';
+                } else {
+                    predictionHistory.slice(0, 20).forEach(item => {
+                        const status = item.status || 'Pending';
+                        let badge = '';
+                        if (status === 'Win') badge = '<span class="result-badge win">WIN</span>';
+                        else if (status === 'Loss') badge = '<span class="result-badge loss">LOSS</span>';
+                        else badge = '<span class="result-badge pending">PENDING</span>';
+                        predHistoryBody.insertAdjacentHTML('beforeend', `
+                                <tr>
+                                    <td>${item.period.slice(-6)}</td>
+                                    <td><strong>${item.prediction}</strong></td>
+                                    <td>${item.actual !== undefined ? item.actual : '-'}</td>
+                                    <td>${badge}</td>
+                                    <td style="font-size:11px;color:#5a7a9a;">${LOGIC_ENGINES[item.logicId]?.name || '--'}</td>
+                                </tr>
+                            `);
+                    });
+                }
+
+                // Update stats for all 10 engines
+                for (let i = 1; i <= 10; i++) {
+                    const total = logicStats[i].wins + logicStats[i].losses;
+                    const acc = total > 0 ? Math.round((logicStats[i].wins / total) * 100) : 0;
+                    const winsEl = document.getElementById(`logic${i}-wins`);
+                    const accEl = document.getElementById(`logic${i}-accuracy`);
+                    if (winsEl) winsEl.textContent = logicStats[i].wins;
+                    if (accEl) accEl.textContent = acc + '%';
+                }
+
+                updateBypassUI();
+            }
+
+            // ─── TIMER ───
+            function runTimerLoop() {
+                const now = new Date(Date.now() + serverTimeOffset);
+                let remaining = 60 - now.getUTCSeconds();
+                if (remaining === 60) remaining = 0;
+                const m = Math.floor(remaining / 60);
+                const s = remaining % 60;
+                const digits = [Math.floor(m / 10), m % 10, Math.floor(s / 10), s % 10];
+                for (let i = 0; i < 4; i++) timerBoxes[i].textContent = digits[i];
+
+                if (remaining === 0 || remaining === 59) {
+                    setTimeout(() => { runSync(); }, 500);
+                }
+            }
+
+            function startTimer() {
+                if (countdownInterval) clearInterval(countdownInterval);
+                runTimerLoop();
+                countdownInterval = setInterval(runTimerLoop, 1000);
+            }
+
+            // ─── UI EVENTS ───
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    const sel = this.dataset.tab;
+                    document.getElementById('tab-history').style.display = sel === 'history' ? 'block' : 'none';
+                    document.getElementById('tab-predictions').style.display = sel === 'predictions' ? 'block' :
+                        'none';
+                    document.getElementById('tab-bypass').style.display = sel === 'bypass' ? 'block' : 'none';
+                });
+            });
+
+            document.querySelectorAll('.logic-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    document.querySelectorAll('.logic-card').forEach(c => c.classList.remove('active'));
+                    this.classList.add('active');
+                    const prevLogic = activeLogic;
+                    activeLogic = parseInt(this.dataset.logic, 10);
+
+                    if (historyLog.length > 0 && engineLifecycleStatus === "predicting") {
+                        const histNums = historyLog.map(item => ({ num: item.num }));
+                        let raw = LOGIC_ENGINES[activeLogic].predict(histNums);
+                        if (flipPending) {
+                            const flipped = raw === 'Big' ? 'Small' : 'Big';
+                            const cf = getRandomColorFlip();
+                            if (cf) overridePrediction = { size: flipped, color: cf };
+                            else overridePrediction = { size: flipped, color: null };
+                            currentActivePrediction = flipped;
+                            flipPending = false;
+                        } else {
+                            currentActivePrediction = raw;
+                            overridePrediction = null;
+                        }
+                        if (predictionHistory.length > 0 && predictionHistory[0].status === 'Pending') {
+                            predictionHistory[0].prediction = currentActivePrediction;
+                            predictionHistory[0].logicId = activeLogic;
+                        }
+                    }
+
+                    if (activeLogic !== prevLogic) {
+                        speakLogicSwitch(LOGIC_ENGINES[activeLogic].name);
+                    }
+
+                    const latest = historyLog.length > 0 ? historyLog[0] : null;
+                    updateUI(latest);
+                });
+            });
+
+            document.querySelectorAll('.filter-btn').forEach(b => b.addEventListener('click', function() {
+                document.querySelectorAll('.filter-btn').forEach(x => x.classList.remove('active'));
+                this.classList.add('active');
+            }));
+
+            document.querySelectorAll('.num-btn').forEach(b => b.addEventListener('click', function() {
+                document.querySelectorAll('.num-btn').forEach(x => x.style.outline = 'none');
+                this.style.outline = '3px solid rgba(255,255,255,0.25)';
+            }));
+
+            document.getElementById('randomBtn').addEventListener('click', function() {
+                const num = Math.floor(Math.random() * 10);
+                document.querySelectorAll('.num-btn').forEach(b => b.style.outline = 'none');
+                const target = document.querySelector(`.num-btn[data-num="${num}"]`);
+                if (target) target.style.outline = '3px solid rgba(255,255,255,0.25)';
+            });
+
+            document.querySelectorAll('.multi-btn').forEach(b => b.addEventListener('click', function() {
+                document.querySelectorAll('.multi-btn').forEach(x => x.classList.remove('active'));
+                this.classList.add('active');
+            }));
+
+            document.querySelectorAll('.bs-btn').forEach(b => b.addEventListener('click', function() {
+                document.querySelectorAll('.bs-btn').forEach(x => x.classList.remove('active'));
+                this.classList.add('active');
+            }));
+
+            // ─── VOICE EVENTS ───
+            voiceSelect.addEventListener('change', function() {
+                selectedVoiceURI = this.value;
+                if (voiceEnabled) {
+                    speak('Voice selected');
+                }
+            });
+
+            voiceToggleBtn.addEventListener('click', function() {
+                voiceEnabled = !voiceEnabled;
+                if (voiceEnabled) {
+                    this.textContent = '🔊 ON';
+                    this.className = 'voice-toggle active';
+                    speak('Voice enabled');
+                } else {
+                    this.textContent = '🔇 OFF';
+                    this.className = 'voice-toggle muted';
+                    window.speechSynthesis.cancel();
+                }
+            });
+
+            // ─── INIT VOICES ───
+            if (window.speechSynthesis) {
+                if (window.speechSynthesis.getVoices().length > 0) {
+                    populateVoices();
+                } else {
+                    window.speechSynthesis.onvoiceschanged = function() {
+                        populateVoices();
+                        window.speechSynthesis.onvoiceschanged = null;
+                    };
+                }
+                setTimeout(populateVoices, 1000);
+            }
+
+            // ─── INIT ───
+            runSync().then(() => startTimer());
+
+            setInterval(() => {
+                if (!isResultShowing) {
+                    runSync();
+                }
+            }, 10000);
+
+        })();
+    </script>
+<script src="js/goku-v2.js"></script>
+</body>
+</html>
