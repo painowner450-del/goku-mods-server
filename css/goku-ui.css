@@ -1,0 +1,120 @@
+/* GOKU MODS — global UI refresh overlay
+   Repaints the theme without touching any page logic.
+   Palette: Saiyan orange + Ki blue on deep space background. */
+
+:root, html[data-theme="light"], html[data-theme="dark"] {
+  --bg-deep: #070a12 !important;
+  --panel: rgba(18, 22, 34, 0.78) !important;
+  --line-strong: rgba(255, 153, 51, 0.28) !important;
+  --text: #f6f2e8 !important;
+  --muted: #8a94a8 !important;
+  --neon-cyan: #22d3ee !important;
+  --neon-purple: #ff9933 !important;   /* saiyan orange */
+  --neon-pink:  #ffcc33 !important;    /* aura gold */
+  --radius: 16px !important;
+  --shadow: 0 22px 60px rgba(255, 153, 51, 0.22), 0 0 0 1px rgba(255, 153, 51, 0.10) !important;
+}
+
+html, body {
+  background: #070a12 !important;
+  color: #f6f2e8 !important;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif !important;
+}
+
+/* Ambient aura background */
+body::before {
+  content: "" !important;
+  position: fixed !important; inset: 0 !important;
+  background:
+    radial-gradient(circle at 14% 18%, rgba(255, 153, 51, 0.22), transparent 45%),
+    radial-gradient(circle at 86% 82%, rgba(34, 211, 238, 0.18), transparent 45%),
+    radial-gradient(circle at 50% 50%, rgba(255, 204, 51, 0.08), transparent 60%) !important;
+  pointer-events: none !important;
+  z-index: 0 !important;
+}
+
+/* Brand gradient on titles */
+h1, h2, .logo-text, .user-info h2, .logo-title {
+  background: linear-gradient(90deg, #ff9933, #ffcc33 55%, #22d3ee) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  letter-spacing: 1.5px !important;
+}
+
+/* Cards & panels */
+.card, .panel, .container > .card, .glass, .box,
+[class*="panel"], [class*="card"] {
+  background: rgba(18, 22, 34, 0.78) !important;
+  border: 1px solid rgba(255, 153, 51, 0.22) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 22px 60px rgba(255, 153, 51, 0.14), 0 0 0 1px rgba(255, 153, 51, 0.08) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+}
+
+/* Buttons */
+button, .btn, .action-btn, .admin-link,
+input[type="submit"], input[type="button"] {
+  background: linear-gradient(135deg, #ff9933, #ff6a00) !important;
+  color: #0b0d14 !important;
+  border: none !important;
+  border-radius: 12px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.5px !important;
+  transition: transform .15s ease, box-shadow .15s ease, filter .15s ease !important;
+  box-shadow: 0 10px 24px rgba(255, 153, 51, 0.35) !important;
+}
+button:hover, .btn:hover, .action-btn:hover {
+  transform: translateY(-1px) !important;
+  filter: brightness(1.06) !important;
+  box-shadow: 0 14px 32px rgba(255, 153, 51, 0.5) !important;
+}
+
+/* Inputs */
+input, select, textarea {
+  background: rgba(10, 14, 22, 0.85) !important;
+  color: #f6f2e8 !important;
+  border: 1px solid rgba(255, 153, 51, 0.28) !important;
+  border-radius: 12px !important;
+  padding: 12px 14px !important;
+  outline: none !important;
+}
+input:focus, select:focus, textarea:focus {
+  border-color: #ffcc33 !important;
+  box-shadow: 0 0 0 3px rgba(255, 204, 51, 0.18) !important;
+}
+
+/* Badges & tags */
+.badge, .tag, .plan-badge, .logic-badge, .chip {
+  background: linear-gradient(135deg, rgba(255,153,51,.20), rgba(34,211,238,.15)) !important;
+  color: #ffcc33 !important;
+  border: 1px solid rgba(255, 204, 51, 0.35) !important;
+  border-radius: 999px !important;
+  padding: 4px 10px !important;
+  font-weight: 700 !important;
+  letter-spacing: .5px !important;
+}
+
+/* Links */
+a { color: #ffcc33 !important; }
+a:hover { color: #22d3ee !important; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #ff9933, #22d3ee);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-track { background: transparent; }
+
+/* Subtle top brand watermark */
+body::after {
+  content: "GOKU MODS";
+  position: fixed;
+  right: 12px; bottom: 8px;
+  font-size: 10px; letter-spacing: 3px; font-weight: 800;
+  color: rgba(255, 204, 51, 0.35);
+  pointer-events: none;
+  z-index: 9999;
+}
